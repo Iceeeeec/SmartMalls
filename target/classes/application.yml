@@ -1,0 +1,22 @@
+spring:
+  datasource: # 数据库信息配置
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/sys
+    username: root
+    password: 19115107848
+    type: com.alibaba.druid.pool.DruidDataSource  # 设置druid数据源
+  main:
+    banner-mode: off  # 关闭spring的banner
+server:
+  port: 80  # 端口号
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl   # 开启mp的日志 (输出到控制台)
+  global-config:  # 关闭mybatis的banner
+    banner: false
+baidu:
+  ocr:
+    appId: 58618208
+    apiKey: l0uRAKrJxWGCzmir4ldxf8YR
+    secretKey: owm3G3IIavSoq5lQAnddifNiMot8c7TO
