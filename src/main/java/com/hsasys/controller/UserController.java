@@ -1,10 +1,7 @@
 package com.hsasys.controller;
 
-import com.hsasys.DecisionTree;
-import com.hsasys.controller.tools.Code;
 import com.hsasys.controller.tools.Result;
 import com.hsasys.domain.User;
-import com.hsasys.domain.UserType;
 import com.hsasys.service.insert.IUserService;
 import com.hsasys.service.select.SUserService;
 import com.hsasys.service.update.UUserService;
@@ -12,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 
 @Controller
 @Transactional
