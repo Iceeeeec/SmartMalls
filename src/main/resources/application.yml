@@ -1,9 +1,9 @@
 spring:
   datasource: # 数据库信息配置
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/sys
+    url: jdbc:mysql://120.25.233.244:3306/smartmalls
     username: root
-    password: 19115107848
+    password:
     type: com.alibaba.druid.pool.DruidDataSource  # 设置druid数据源
   main:
     banner-mode: off  # 关闭spring的banner
