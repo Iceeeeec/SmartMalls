@@ -1,7 +1,8 @@
 package com.hsasys.service.update;
 
-import com.hsasys.controller.tools.Result;
-import com.hsasys.domain.User;
+
+import com.hsasys.domain.entity.User;
+import com.hsasys.result.Result;
 
 public interface UUserService {
     Result addCollection(Integer userId, Integer foodId);

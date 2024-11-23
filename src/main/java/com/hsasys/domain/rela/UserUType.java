@@ -16,7 +16,7 @@ public class UserUType {
     @TableId(type = IdType.AUTO)
     private Integer id;
     @TableField("id_users")
-    private Integer user;
+    private Integer userId;
     @TableField("id_uTypes")
     private Integer utype;
 }

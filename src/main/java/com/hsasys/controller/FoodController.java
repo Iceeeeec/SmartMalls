@@ -1,6 +1,6 @@
 package com.hsasys.controller;
 
-import com.hsasys.controller.tools.Result;
+import com.hsasys.result.Result;
 import com.hsasys.service.select.SFinishedFoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,12 +24,14 @@ public class FoodController {
 
     @RequestMapping("/all")
     Result selectAllFoods(){
-        return sFinishedFoodService.selectAllFoods();
+//        return sFinishedFoodService.selectAllFoods();
+        return null;
     }
 
     @RequestMapping("/one")
     Result selectOneFood(@RequestParam("id")String id){
-        return sFinishedFoodService.selectOneFood(id);
+//        return sFinishedFoodService.selectOneFood(id);
+        return null;
     }
 
 

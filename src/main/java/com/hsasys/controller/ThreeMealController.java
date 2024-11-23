@@ -1,7 +1,7 @@
 package com.hsasys.controller;
 
-import com.hsasys.controller.tools.Result;
 import com.hsasys.domain.vo.ThreeMealReceiveVo;
+import com.hsasys.result.Result;
 import com.hsasys.service.insert.IThreeMealService;
 import com.hsasys.service.select.SThreeMealService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +22,14 @@ public class ThreeMealController {
 
     @RequestMapping("/insert")
     public Result insertThreeMeal(@RequestBody ThreeMealReceiveVo vo){
-        return iThreeMealService.insertThreeMeal(vo);
+//        return iThreeMealService.insertThreeMeal(vo);
+        return null;
     }
 
     @RequestMapping("/get")
     public Result getAllMeals(@RequestParam("userId") Integer userId){
-        return sThreeMealService.getAllMeals(userId);
+//        return sThreeMealService.getAllMeals(userId);
+        return null;
     }
 
 }

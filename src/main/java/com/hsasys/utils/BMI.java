@@ -1,4 +1,4 @@
-package com.hsasys.controller.tools;
+package com.hsasys.utils;
 
 
 public class BMI {

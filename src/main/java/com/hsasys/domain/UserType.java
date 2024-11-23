@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("user_types")
-public class UserType {
+public class UserType
+{
     @TableId(type = IdType.AUTO)
     private Integer id;
     private String type;

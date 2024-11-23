@@ -1,6 +1,6 @@
 package com.hsasys.controller;
 
-import com.hsasys.controller.tools.Result;
+import com.hsasys.result.Result;
 import com.hsasys.service.select.SFoodTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,8 +19,10 @@ public class FoodTypeController {
     private SFoodTypeService sFoodTypeService;
 
     @RequestMapping("/all")
-    Result selectAllFoodType(){
-        return sFoodTypeService.selectAllFoodType();
+    Result selectAllFoodType()
+    {
+//        return sFoodTypeService.selectAllFoodType();
+        return null;
     }
 
 }

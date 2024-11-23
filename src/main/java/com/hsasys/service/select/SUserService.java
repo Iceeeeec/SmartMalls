@@ -1,12 +1,16 @@
 package com.hsasys.service.select;
 
-import com.hsasys.controller.tools.Result;
-import com.hsasys.domain.User;
+import com.hsasys.domain.dto.UserLoginDto;
+import com.hsasys.domain.entity.User;
+
+import com.hsasys.domain.dto.UserRegisterDto;
+import com.hsasys.domain.vo.UserLoginVo;
+import com.hsasys.result.Result;
 
 public interface SUserService {
-    Result login(User user);
+    Result<UserLoginVo> login(UserLoginDto userLoginDto);
 
-    Result register(User user);
+    void register(UserRegisterDto userRegisterDto);
 
     Result getUsertype(User user);
 

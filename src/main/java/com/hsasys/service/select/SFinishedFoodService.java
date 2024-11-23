@@ -1,7 +1,5 @@
 package com.hsasys.service.select;
-
 import com.hsasys.controller.tools.Result;
-
 import java.util.List;
 import java.util.Map;
 

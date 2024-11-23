@@ -1,14 +1,11 @@
 package com.hsasys.service.insert.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hsasys.controller.tools.Code;
 import com.hsasys.controller.tools.Result;
 import com.hsasys.dao.domain_mapper.UserMapper;
 import com.hsasys.dao.domain_mapper.UserTypeMapper;
 import com.hsasys.dao.rela_mapper.UserUTypeMapper;
-import com.hsasys.domain.User;
-import com.hsasys.domain.UserType;
-import com.hsasys.domain.rela.UserUType;
+import com.hsasys.domain.entity.User;
 import com.hsasys.service.insert.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,8 +23,8 @@ public class IUserServiceImpl implements IUserService {
 
     @Override
     public Result userInsert(User user) {
-        if(userMapper.insert(user) <= 0)
-            return err_result;
+//        if(userMapper.insert(user) <= 0)
+//            return err_result;
         return new Result(Code.OK, null, "OK");
     }
 
@@ -40,9 +37,9 @@ public class IUserServiceImpl implements IUserService {
 
     @Override
     public Result relaUserUTypeInsert(Integer userId, Integer userTypeId) {
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getId, userId);
-        User user1 = userMapper.selectOne(wrapper);
+//        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+//        wrapper.eq(User::getId, userId);
+//        User user1 = userMapper.selectOne(wrapper);
         // 获取height和weight
 
 //        LambdaQueryWrapper<UserType> wrapper1 = new LambdaQueryWrapper<>();
