@@ -24,14 +24,14 @@ public class FoodController {
 
     @RequestMapping("/all")
     Result selectAllFoods(){
-//        return sFinishedFoodService.selectAllFoods();
-        return null;
+        return sFinishedFoodService.selectAllFoods();
+//        return null;
     }
 
     @RequestMapping("/one")
     Result selectOneFood(@RequestParam("id")String id){
-//        return sFinishedFoodService.selectOneFood(id);
-        return null;
+        return sFinishedFoodService.selectOneFood(id);
+//        return null;
     }
 
 
@@ -41,8 +41,11 @@ public class FoodController {
         return null;
     }
 
+    /*
+    * 返回类型 List<Map<String,Object>>
+    * */
     @RequestMapping("/get")
-    List<Map<String,Object>> getone(@RequestParam String name){
+    Result getone(@RequestParam String name){
         return sFinishedFoodService.selectOne( name );
     }
 }

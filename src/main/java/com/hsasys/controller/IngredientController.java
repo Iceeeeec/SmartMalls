@@ -20,7 +20,7 @@ public class IngredientController {
 
     @RequestMapping("/all")
     Result selectAllIngredient(){
-//        return sIngredientService.selectAllIngredient();
-        return null;
+        return sIngredientService.selectAllIngredient();
+//        return null;
     }
 }

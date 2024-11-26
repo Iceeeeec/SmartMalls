@@ -1,7 +1,6 @@
 package com.hsasys.service.update.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.hsasys.controller.tools.Code;
 import com.hsasys.dao.domain_mapper.FinishedFoodMapper;
 import com.hsasys.dao.domain_mapper.UserMapper;
 import com.hsasys.dao.rela_mapper.UserFoodCollectionMapper;

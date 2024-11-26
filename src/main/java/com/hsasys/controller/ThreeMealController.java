@@ -28,8 +28,8 @@ public class ThreeMealController {
 
     @RequestMapping("/get")
     public Result getAllMeals(@RequestParam("userId") Integer userId){
-//        return sThreeMealService.getAllMeals(userId);
-        return null;
+        return sThreeMealService.getAllMeals(userId);
+//        return null;
     }
 
 }
