@@ -4,14 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hsasys.constant.JwtClaimsConstant;
 import com.hsasys.controller.tools.Code;
 
-import com.hsasys.dao.domain_mapper.FinishedFoodMapper;
-import com.hsasys.dao.domain_mapper.UserMapper;
-import com.hsasys.dao.domain_mapper.UserTypeMapper;
+import com.hsasys.dao.domain_mapper.*;
 import com.hsasys.dao.rela_mapper.UserFoodCollectionMapper;
 import com.hsasys.dao.rela_mapper.UserUTypeMapper;
 import com.hsasys.domain.FinishedFood;
 import com.hsasys.domain.UserType;
 import com.hsasys.domain.dto.UserLoginDto;
+import com.hsasys.domain.entity.Allergen;
+import com.hsasys.domain.entity.ChronicDisease;
+import com.hsasys.domain.entity.FoodPreference;
 import com.hsasys.domain.entity.User;
 import com.hsasys.domain.dto.UserRegisterDto;
 import com.hsasys.domain.rela.UserFoodCollection;
@@ -47,6 +48,15 @@ public class SUserServiceImpl implements SUserService {
     private UserFoodCollectionMapper userFoodCollectionMapper;
     @Autowired
     private FinishedFoodMapper finishedFoodMapper;
+
+    @Autowired
+    private AllergenMapper allergenMapper;
+
+    @Autowired
+    private ChronicDiseaseMapper chronicDiseaseMapper;
+
+    @Autowired
+    private FoodPreferenceMapper foodPreferenceMapper;
 
     @Autowired
     private UUserService userUpdateService;
@@ -130,9 +140,18 @@ public class SUserServiceImpl implements SUserService {
         //根据id查询用户的类型
         List<UserType> types = userMapper.selectUserTypesById(user.getId());
         UserUTypeVo typeList = UserUTypeVo.builder().type(types).build();
+        //根据id查询过敏源
+        List<Allergen> allergens =  allergenMapper.selectAllergensById(user.getId());
+        //根据id查询慢性疾病
+        List<ChronicDisease> chronicDiseases = chronicDiseaseMapper.selectChronicDiseaseById(user.getId());
+        //根据id查询饮食偏好
+        List<FoodPreference> foodPreferences = foodPreferenceMapper.selectPreferenceById(user.getId());
         //封装返回用户信息
         UserLoginVo userLoginVo = BeanCopyUtils.copyBean(user, UserLoginVo.class);
         userLoginVo.setUserUTypeVo(typeList);
+        userLoginVo.setAllergen(allergens);
+        userLoginVo.setDisease(chronicDiseases);
+        userLoginVo.setPreference(foodPreferences);
         userLoginVo.setToken(token);
         return Result.success(userLoginVo);
     }

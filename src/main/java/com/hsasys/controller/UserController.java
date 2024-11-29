@@ -1,9 +1,12 @@
 package com.hsasys.controller;
 
 import com.hsasys.domain.dto.UserLoginDto;
+import com.hsasys.domain.dto.UserUpdateDto;
+import com.hsasys.domain.entity.Allergen;
+import com.hsasys.domain.entity.ChronicDisease;
+import com.hsasys.domain.entity.FoodPreference;
 import com.hsasys.domain.entity.User;
 import com.hsasys.domain.dto.UserRegisterDto;
-import com.hsasys.domain.vo.UserLoginVo;
 import com.hsasys.result.Result;
 import com.hsasys.service.insert.IUserService;
 import com.hsasys.service.select.SUserService;
@@ -12,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @Transactional
@@ -26,13 +31,13 @@ public class UserController {
     @Autowired
     private UUserService uUserService;
 
-    @RequestMapping("/login")
+    @PostMapping("/login")
     Result login(@RequestBody UserLoginDto userLoginDto)
     {
          return sUserService.login(userLoginDto);
     }
 
-    @RequestMapping("/register")
+    @PostMapping("/register")
     Result register(@RequestBody UserRegisterDto userRegisterDto)
     {
         sUserService.register(userRegisterDto);
@@ -78,12 +83,35 @@ public class UserController {
         return null;
     }
 
-    @RequestMapping("/updateuser")
-    Result updateUserInfo(@RequestBody User user)
+    @PutMapping("/update")
+    Result updateUserInfo(@RequestBody UserUpdateDto userUpdateDto)
     {
-//        return uUserService.updateUserInfo(user);
-        return null;
+        return uUserService.updateUser(userUpdateDto);
     }
 
-
+    /**
+     * 所有的过敏源
+     * @return
+     */
+    @GetMapping("/allergen")
+    Result<List<Allergen>> getAllergens()
+    {
+        return uUserService.getAllergens();
+    }
+    /**
+     * 所有的慢性疾病
+     */
+    @GetMapping("/disease")
+    Result<List<ChronicDisease>> getDiseases()
+    {
+        return uUserService.getDiseases();
+    }
+    /**
+     * 所有的饮食偏好
+     */
+    @GetMapping("/preference")
+    Result<List<FoodPreference>> getPreferences()
+    {
+        return uUserService.getPreferences();
+    }
 }

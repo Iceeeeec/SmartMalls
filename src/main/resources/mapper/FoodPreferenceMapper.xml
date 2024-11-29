@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hsasys.dao.domain_mapper.FoodPreferenceMapper">
+    <insert id="insertBatch">
+        insert into user_preference(user_id, preference_id) values
+        <foreach collection="preferenceIds" item="preferenceId" separator=",">
+                (#{id}, #{preferenceId})
+        </foreach>
+    </insert>
+
+
+    <select id="selectPreferenceById" resultType="com.hsasys.domain.entity.FoodPreference">
+        select * from food_preference where id in (
+            select preference_id from user_preference where user_id = #{userId}
+        )
+    </select>
+</mapper>

@@ -5,5 +5,7 @@ import com.hsasys.domain.rela.FoodFType;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface FoodFTypeMapper extends BaseMapper<FoodFType> {
+public interface FoodFTypeMapper extends BaseMapper<FoodFType>
+{
+
 }
