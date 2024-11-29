@@ -2,7 +2,6 @@ package com.hsasys.service.select.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hsasys.constant.JwtClaimsConstant;
-import com.hsasys.controller.tools.Code;
 
 import com.hsasys.dao.domain_mapper.*;
 import com.hsasys.dao.rela_mapper.UserFoodCollectionMapper;

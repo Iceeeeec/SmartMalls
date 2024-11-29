@@ -2,8 +2,7 @@ package com.hsasys.baiduocr.api;
 
 import com.hsasys.baiduocr.service.OcrService;
 import com.hsasys.baiduocr.service.foodaddService;
-import com.hsasys.controller.tools.Code;
-import com.hsasys.controller.tools.Result;
+import com.hsasys.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -77,7 +76,7 @@ public class OcrApiController {
         }
         System.out.println(myList);
         System.out.println(list.size());
-        return new  Result(Code.OK,myList,null);
+        return Result.success(myList);
     }
 
     @PostMapping("/identify")
@@ -136,10 +135,9 @@ public class OcrApiController {
             }
         }
         if(list2.size()>0||list2!=null){
-//            return Result.success("添加剂:"+list2);
-            return new Result(Code.OK, "添加剂:"+list2, null);
+            return Result.success("添加剂:"+list2);
         }else {
-            return new Result(Code.OK,"经识别，不含任何添加剂哟！",null);
+            return Result.success("经识别，不含任何添加剂哟！");
         }
     }
 }

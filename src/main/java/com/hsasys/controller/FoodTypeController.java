@@ -21,8 +21,8 @@ public class FoodTypeController {
     @RequestMapping("/all")
     Result selectAllFoodType()
     {
-//        return sFoodTypeService.selectAllFoodType();
-        return null;
+        return sFoodTypeService.selectAllFoodType();
+//        return null;
     }
 
 }
