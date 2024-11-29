@@ -1,8 +1,7 @@
 package com.hsasys.service.select.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.hsasys.controller.tools.Code;
-import com.hsasys.controller.tools.Result;
+import com.hsasys.result.Result;
 import com.hsasys.dao.domain_mapper.*;
 import com.hsasys.dao.rela_mapper.*;
 import com.hsasys.domain.*;
@@ -43,7 +42,7 @@ public class SFinishedFoodServiceImpl implements SFinishedFoodService {
     @Autowired
     private FoodTypeMapper foodTypeMapper;
 
-    private final Result err_result = new Result(Code.ERR,null);
+//    private final Result err_result = new Result(Code.ERR,null);
 
     @Override
     public Result selectAllFoods() {
@@ -51,7 +50,7 @@ public class SFinishedFoodServiceImpl implements SFinishedFoodService {
         wrapper.select();
         List<FinishedFood> finishedFoods = finishedFoodMapper.selectList(wrapper);
         if(finishedFoods == null)
-            return err_result;
+            return Result.error( "没有食物" );
         List<FinishedFoodVo> finishedFoodVos = new ArrayList<>();
         for(FinishedFood finishedFood:finishedFoods){
             FinishedFoodVo finishedFoodVo = new FinishedFoodVo(finishedFood);
@@ -59,20 +58,20 @@ public class SFinishedFoodServiceImpl implements SFinishedFoodService {
             wrapper1.eq(FoodFType::getFoodId,finishedFood.getId());
             FoodFType foodFType = foodFTypeMapper.selectOne(wrapper1);
             if(foodFType == null)
-                return err_result;
+                return Result.error( "没有食物类型" );
 
             LambdaQueryWrapper<FoodType> wrapper2 = new LambdaQueryWrapper<>();
             wrapper2.eq(FoodType::getId, foodFType.getTypeId());
             FoodType foodType = foodTypeMapper.selectOne(wrapper2);
             if(foodType == null)
-                return err_result;
+                return Result.error( "没有食物类型"  );
 
             finishedFoodVo.setType(foodType.getType());
             finishedFoodVos.add(finishedFoodVo);
         }
 
 
-        return new Result(Code.OK, finishedFoodVos, "OK");
+        return Result.success(finishedFoodVos);
 
 //        for(FinishedFood finishedFood:finishedFoods){
 //            // foodAddictive
@@ -89,7 +88,7 @@ public class SFinishedFoodServiceImpl implements SFinishedFoodService {
 
 
     @Override
-    public List<Map<String,Object>> selectOne(String name) {
+    public Result selectOne(String name) {
         LambdaQueryWrapper<FinishedFood> wrapper=new LambdaQueryWrapper<>();
         wrapper.eq(FinishedFood::getName,name);
         FinishedFood food=finishedFoodMapper.selectOne( wrapper );
@@ -114,7 +113,7 @@ public class SFinishedFoodServiceImpl implements SFinishedFoodService {
         map3.put( "name","heat" );
         map3.put( "value",heat );
         mapList.add( map3 );
-        return mapList;
+        return Result.success(mapList);
     }
     @Override
     public Result selectOneFood(String id) {
@@ -122,7 +121,7 @@ public class SFinishedFoodServiceImpl implements SFinishedFoodService {
         wrapper.eq(FinishedFood::getId, id);
         FinishedFood food = finishedFoodMapper.selectOne(wrapper);
         if(food == null)
-            return err_result;
+            return Result.error( "未找到该食物" );
 
         FinishedFoodAttributeVo finishedFood = new FinishedFoodAttributeVo(food);
 
@@ -208,6 +207,6 @@ public class SFinishedFoodServiceImpl implements SFinishedFoodService {
             finishedFood.setFoodTypes(foodTypes);
         }
 
-        return new Result(Code.OK, finishedFood, "OK");
+        return Result.success(finishedFood);
     }
 }

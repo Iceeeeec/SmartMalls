@@ -1,7 +1,9 @@
 package com.hsasys;
 
-import com.hsasys.controller.tools.Result;
-import com.hsasys.domain.User;
+import com.hsasys.domain.dto.UserLoginDto;
+import com.hsasys.domain.entity.User;
+import com.hsasys.domain.vo.UserLoginVo;
+import com.hsasys.result.Result;
 import com.hsasys.service.select.SUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +16,10 @@ class HsaSysApplicationTests {
 
     @Test
     void test_login(){
-        User user = new User();
-        user.setAccount("root");
+        UserLoginDto user = new UserLoginDto();
+        user.setUsername("root");
         user.setPassword("123456");
-        Result login = userService.login(user);
+        Result<UserLoginVo> login = userService.login(user);
         System.out.println(login);
     }
 

@@ -1,8 +1,9 @@
 package com.hsasys.service.insert;
 
-import com.hsasys.controller.tools.Result;
-import com.hsasys.domain.User;
+
 import com.hsasys.domain.UserType;
+import com.hsasys.domain.entity.User;
+import com.hsasys.result.Result;
 
 public interface IUserService {
     public Result userInsert(User user);

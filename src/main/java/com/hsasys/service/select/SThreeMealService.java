@@ -1,7 +1,7 @@
 package com.hsasys.service.select;
 
-import com.hsasys.controller.tools.Result;
+import com.hsasys.result.Result;
 
 public interface SThreeMealService {
-    public Result getAllMeals(Integer id);
+   Result getAllMeals(Integer id);
 }

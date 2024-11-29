@@ -1,6 +1,6 @@
 package com.hsasys.controller;
 
-import com.hsasys.controller.tools.Result;
+import com.hsasys.result.Result;
 import com.hsasys.service.select.SIngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,5 +21,6 @@ public class IngredientController {
     @RequestMapping("/all")
     Result selectAllIngredient(){
         return sIngredientService.selectAllIngredient();
+//        return null;
     }
 }
