@@ -8,9 +8,11 @@ public class BMI {
     public static final Integer OBESITY = 4;
 
 
-    public static double calculateBMI(double weight, double height) {
-        // 体重（kg）除以身高（m）的平方
-        return weight / (height * height) * 10000;
+    public static double calculateBMI(double weight, double height)
+    {
+        // 计算 BMI 并格式化保留两位小数
+        double bmi = weight / (height * height) * 10000;
+        return Double.parseDouble(String.format("%.2f", bmi));
     }
 
     public static Integer interpretBMI(double bmi) {

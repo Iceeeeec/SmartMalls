@@ -1,9 +1,14 @@
 package com.hsasys.domain.vo;
 
+import com.hsasys.domain.entity.Allergen;
+import com.hsasys.domain.entity.ChronicDisease;
+import com.hsasys.domain.entity.FoodPreference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -25,11 +30,11 @@ public class UserLoginVo
 
     private Double weight;
 
-    private String allergen;//过敏源
+    private List<Allergen> allergen;//过敏源
 
-    private String disease;//慢性病
+    private List<ChronicDisease> disease;//慢性病
 
-    private String preference;//食物喜好
+    private List<FoodPreference> preference;//食物喜好
 
     private String name;
 
