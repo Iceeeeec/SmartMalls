@@ -1,7 +1,6 @@
 package com.hsasys.baiduocr.api;
 
 import com.hsasys.baiduocr.service.OcrService;
-import com.hsasys.baiduocr.service.foodaddService;
 import com.hsasys.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,8 +26,7 @@ public class OcrApiController {
 
     @Autowired
     private OcrService ocrService;
-    @Autowired
-    private foodaddService foodaddService;
+
 
     /**
      * 完整路径：http://localhost:80/api/ocr/awardHandle
@@ -39,7 +37,9 @@ public class OcrApiController {
      * @return Json返回体
      */
     @PostMapping("/awardHandle")
-    public Result awardHandle(@RequestParam("file") MultipartFile ocr) throws Exception {
+    public Result awardHandle(@RequestParam("file") MultipartFile ocr) throws Exception
+    {
+        System.out.println(ocr.getName() + " " + ocr.getContentType() + " " + ocr.getOriginalFilename());
         com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
         byte[] file = null;
         try {
@@ -59,85 +59,7 @@ public class OcrApiController {
         }
         List<String> list= ocrService.ocr_accurateGeneral( file );
 
-        StringBuilder sb = new StringBuilder();
-        for (String item : list) {
-            sb.append(item).append(" ");
-        }
-        String result = sb.toString().trim();
-        result=result.replaceAll( "\\s+","" );
-        List<String> myList = new ArrayList<>();
-        String[] splitStrings = result.split("、");
-        for(String item:splitStrings){
-            myList.add( item );
-        }
-
-        for(int i=0;i< myList.size();i++){
-            System.out.println(myList.get(i));
-        }
-        System.out.println(myList);
-        System.out.println(list.size());
-        return Result.success(myList);
+        return Result.success(list);
     }
 
-    @PostMapping("/identify")
-    public Result identify(@RequestParam("file") MultipartFile ocr) throws Exception {
-        com.alibaba.fastjson.JSONObject jsonObject = new com.alibaba.fastjson.JSONObject();
-        byte[] file = null;
-        try {
-            file = ocr.getBytes();
-        } catch (IOException e) {
-            e.printStackTrace();
-            jsonObject.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            jsonObject.put("result", false);
-            jsonObject.put("message", "上传图片失败");
-        }
-        try {
-            jsonObject = ocrService.dataHandle(file);
-        } catch (Exception e) {
-            jsonObject.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            jsonObject.put("result", false);
-            jsonObject.put("message", "图片识别出错");
-        }
-        List<String> list= ocrService.ocr_accurateGeneral( file );
-
-        StringBuilder sb = new StringBuilder();
-        for (String item : list) {
-            sb.append(item).append(" ");
-        }
-        String result = sb.toString().trim();
-        result=result.replaceAll( "\\s+","" );
-        List<String> myList = new ArrayList<>();
-        String[] splitStrings = result.split("、");
-        for(String item:splitStrings){
-            myList.add( item );
-        }
-
-        List<String> listadd = foodaddService.listadd();
-        List<String> listsugar = foodaddService.listsugar();
-        List<String> listtran = foodaddService.listtran();
-        List<String> list2=new ArrayList<>();
-        for(String str:listadd){
-            if(myList.contains( str )){
-                list2.add( str );
-//                return "添加剂："+list2.get( 0 );
-            }
-        }
-        for(String str:listsugar){
-            if(myList.contains( str )){
-                list2.add( str );
-//                return "添加糖："+list2.get( 0 );
-            }
-        }
-        for(String str:listtran){
-            if(myList.contains( str )){
-                list2.add( str );
-//                return "反式脂肪酸："+list2.get( 0 );
-            }
-        }
-        if(list2.size()>0||list2!=null){
-            return Result.success("添加剂:"+list2);
-        }else {
-            return Result.success("经识别，不含任何添加剂哟！");
-        }
-    }
 }

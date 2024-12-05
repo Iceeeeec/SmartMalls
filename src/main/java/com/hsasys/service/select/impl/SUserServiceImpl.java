@@ -9,10 +9,7 @@ import com.hsasys.dao.rela_mapper.UserUTypeMapper;
 import com.hsasys.domain.FinishedFood;
 import com.hsasys.domain.UserType;
 import com.hsasys.domain.dto.UserLoginDto;
-import com.hsasys.domain.entity.Allergen;
-import com.hsasys.domain.entity.ChronicDisease;
-import com.hsasys.domain.entity.FoodPreference;
-import com.hsasys.domain.entity.User;
+import com.hsasys.domain.entity.*;
 import com.hsasys.domain.dto.UserRegisterDto;
 import com.hsasys.domain.rela.UserFoodCollection;
 import com.hsasys.domain.vo.UserLoginVo;
@@ -97,6 +94,7 @@ public class SUserServiceImpl implements SUserService {
                 return Result.error("收藏的菜品不存在");
             finishedFoods.add(finishedFood);
         }
+
 
         return Result.success(finishedFoods);
     }
