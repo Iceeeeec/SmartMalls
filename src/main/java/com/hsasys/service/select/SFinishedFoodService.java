@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface SFinishedFoodService {
-    Result selectOneFood(String name);
     Result selectAllFoods();
     Result selectOne(String name);
-
+    Result selectById(Integer id);
 }

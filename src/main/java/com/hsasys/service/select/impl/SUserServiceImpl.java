@@ -4,14 +4,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hsasys.constant.JwtClaimsConstant;
 
 import com.hsasys.dao.domain_mapper.*;
-import com.hsasys.dao.rela_mapper.UserFoodCollectionMapper;
-import com.hsasys.dao.rela_mapper.UserUTypeMapper;
-import com.hsasys.domain.FinishedFood;
+
 import com.hsasys.domain.UserType;
 import com.hsasys.domain.dto.UserLoginDto;
-import com.hsasys.domain.entity.*;
+import com.hsasys.domain.entity.Allergen;
+import com.hsasys.domain.entity.ChronicDisease;
+import com.hsasys.domain.entity.FoodPreference;
+import com.hsasys.domain.entity.User;
 import com.hsasys.domain.dto.UserRegisterDto;
-import com.hsasys.domain.rela.UserFoodCollection;
+
 import com.hsasys.domain.vo.UserLoginVo;
 import com.hsasys.domain.vo.UserUTypeVo;
 import com.hsasys.exception.PasswordErrorException;
@@ -36,14 +37,6 @@ import java.util.Map;
 public class SUserServiceImpl implements SUserService {
     @Autowired
     private UserMapper userMapper;
-    @Autowired
-    private UserTypeMapper userTypeMapper;
-    @Autowired
-    private UserUTypeMapper userUTypeMapper;
-    @Autowired
-    private UserFoodCollectionMapper userFoodCollectionMapper;
-    @Autowired
-    private FinishedFoodMapper finishedFoodMapper;
 
     @Autowired
     private AllergenMapper allergenMapper;
@@ -60,44 +53,8 @@ public class SUserServiceImpl implements SUserService {
     @Autowired
     private JwtProperties jwtProperties;
 
-    @Override
-    public Result getPersonalInfo(Integer userId) {
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getId, userId);
-        User user = userMapper.selectOne(wrapper);
-        if(user == null)
-            return Result.error("用户不存在");
-
-        return Result.success(user);
-    }
-
-    @Override
-    public Result getCollectionInfo(Integer userId) {
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getId, userId);
-        User user = userMapper.selectOne(wrapper);
-        if(user == null)
-            return Result.error("用户不存在");
-
-        LambdaQueryWrapper<UserFoodCollection> wrapper1 = new LambdaQueryWrapper<>();
-        wrapper1.eq(UserFoodCollection::getUserId, userId);
-        List<UserFoodCollection> userFoodCollections = userFoodCollectionMapper.selectList(wrapper1);
-        if(userFoodCollections == null)
-            return Result.error("用户没有收藏");
-
-        List<FinishedFood> finishedFoods = new ArrayList<>();
-        for(UserFoodCollection userFoodCollection:userFoodCollections){
-            LambdaQueryWrapper<FinishedFood> wrapper2 = new LambdaQueryWrapper<>();
-            wrapper2.eq(FinishedFood::getId, userFoodCollection.getFoodId());
-            FinishedFood finishedFood = finishedFoodMapper.selectOne(wrapper2);
-            if(finishedFood == null)
-                return Result.error("收藏的菜品不存在");
-            finishedFoods.add(finishedFood);
-        }
 
 
-        return Result.success(finishedFoods);
-    }
 
     @Override
     public Double getBMI(Integer userId) {
@@ -154,7 +111,7 @@ public class SUserServiceImpl implements SUserService {
     }
 
     @Override
-    public void register(UserRegisterDto userRegisterDto)
+    public Result register(UserRegisterDto userRegisterDto)
     {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getUsername, userRegisterDto.getUsername());
@@ -183,33 +140,7 @@ public class SUserServiceImpl implements SUserService {
                     .build();
             userUpdateService.updateUserInfo(user);
         }
+        return Result.success();
     }
 
-    @Override
-    public Result getUsertype(User user)
-    {
-//        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-//        wrapper.eq(User::getName, user.getName());
-//        User user1 = userMapper.selectOne(wrapper);
-//        System.out.println(user1);
-//
-//        LambdaQueryWrapper<UserUType> wrapper2 = new LambdaQueryWrapper<>();
-//        wrapper2.eq(UserUType::getUser,user1.getId());
-//        List<UserUType> userUTypes = userUTypeMapper.selectList(wrapper2);
-//        System.out.println(userUTypes);
-//        if(userUTypes == null)
-//            return err_result;
-//
-//        List<UserType> userTypes = new ArrayList<>();
-//        for(UserUType u:userUTypes)
-//        {
-//            LambdaQueryWrapper<UserType> wrapper1 = new LambdaQueryWrapper<>();
-//            wrapper1.eq(UserType::getId,u.getUtype());
-//            UserType userType = userTypeMapper.selectOne(wrapper1);
-//            userTypes.add(userType);
-//        }
-//
-//        return new Result(Code.OK,user1, userTypes);
-        return null;
-    }
 }

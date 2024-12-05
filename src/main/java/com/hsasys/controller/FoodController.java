@@ -5,10 +5,7 @@ import com.hsasys.service.select.SFinishedFoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -23,29 +20,20 @@ public class FoodController {
     private SFinishedFoodService sFinishedFoodService;
 
     @RequestMapping("/all")
-    Result selectAllFoods(){
+    public Result selectAllFoods(){
         return sFinishedFoodService.selectAllFoods();
-//        return null;
-    }
-
-    @RequestMapping("/one")
-    Result selectOneFood(@RequestParam("id")String id){
-        return sFinishedFoodService.selectOneFood(id);
-//        return null;
-    }
-
-
-
-    @RequestMapping("/ingredients")
-    Result selectAllIngredient(){
-        return null;
     }
 
     /*
     * 返回类型 List<Map<String,Object>>
     * */
     @RequestMapping("/get")
-    Result getone(@RequestParam String name){
+    public Result getByName(@RequestParam String name){
         return sFinishedFoodService.selectOne( name );
+    }
+
+    @GetMapping("/getById")
+    public Result getById(@RequestParam Integer id){
+        return sFinishedFoodService.selectById( id );
     }
 }
