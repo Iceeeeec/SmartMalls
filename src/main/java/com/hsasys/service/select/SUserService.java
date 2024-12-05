@@ -10,13 +10,8 @@ import com.hsasys.result.Result;
 public interface SUserService {
     Result<UserLoginVo> login(UserLoginDto userLoginDto);
 
-    void register(UserRegisterDto userRegisterDto);
+    Result register(UserRegisterDto userRegisterDto);
 
-    Result getUsertype(User user);
-
-    Result getPersonalInfo(Integer userId);
-
-    Result getCollectionInfo(Integer userId);
 
     Double getBMI(Integer userId);
 }

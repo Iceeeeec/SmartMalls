@@ -3,15 +3,14 @@ package com.hsasys.service.update.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 
 import com.hsasys.dao.domain_mapper.*;
-import com.hsasys.dao.rela_mapper.UserFoodCollectionMapper;
 import com.hsasys.dao.rela_mapper.UserUTypeMapper;
-import com.hsasys.domain.FinishedFood;
+
 import com.hsasys.domain.dto.UserUpdateDto;
 import com.hsasys.domain.entity.Allergen;
 import com.hsasys.domain.entity.ChronicDisease;
 import com.hsasys.domain.entity.FoodPreference;
 import com.hsasys.domain.entity.User;
-import com.hsasys.domain.rela.UserFoodCollection;
+
 import com.hsasys.domain.rela.UserUType;
 import com.hsasys.exception.PasswordErrorException;
 import com.hsasys.exception.PasswordIsEqualException;
@@ -30,11 +29,7 @@ import java.util.List;
 @Service
 public class UUserServiceImpl implements UUserService {
     @Autowired
-    private UserFoodCollectionMapper userFoodCollectionMapper;
-    @Autowired
     private UserMapper userMapper;
-    @Autowired
-    private FinishedFoodMapper finishedFoodMapper;
     @Autowired
     private UserUTypeMapper userUTypeMapper;
 
@@ -170,40 +165,5 @@ public class UUserServiceImpl implements UUserService {
         return Result.success(foodPreferenceMapper.selectList(null));
     }
 
-    @Override
-    public Result addCollection(Integer userId, Integer foodId)
-    {
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getId, userId);
-        User user = userMapper.selectOne(wrapper);
-        if(user == null)
-        {
-            return Result.error("用户不存在");
-        }
-        LambdaQueryWrapper<FinishedFood> wrapper1 = new LambdaQueryWrapper<>();
-        wrapper1.eq(FinishedFood::getId, foodId);
-        FinishedFood finishedFood = finishedFoodMapper.selectOne(wrapper1);
-        if(finishedFood == null)
-        {
-            return Result.error("食物不存在");
 
-        }
-
-        // 判断是否已有收藏
-        LambdaQueryWrapper<UserFoodCollection> wrapper2 = new LambdaQueryWrapper<>();
-        wrapper2.eq(UserFoodCollection::getUserId, userId).eq(UserFoodCollection::getFoodId, foodId);
-        UserFoodCollection userFoodCollection = userFoodCollectionMapper.selectOne(wrapper2);
-        if(userFoodCollection != null)
-        {
-            Result.error("已收藏");
-        }
-
-        int insert = userFoodCollectionMapper.insert(new UserFoodCollection(null, userId, foodId));
-        if(insert <=0)
-        {
-            return Result.error("收藏失败");
-        }
-
-        return Result.success();
-    }
 }

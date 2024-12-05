@@ -11,7 +11,6 @@ import com.hsasys.result.Result;
 import java.util.List;
 
 public interface UUserService {
-    Result addCollection(Integer userId, Integer foodId);
 
     Result updateUserInfo(User user);
 

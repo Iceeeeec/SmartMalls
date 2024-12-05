@@ -4,10 +4,16 @@ package com.hsasys.baiduocr.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.baidu.aip.ocr.AipOcr;
 import com.hsasys.baiduocr.service.OcrService;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
+import java.io.ByteArrayOutputStream;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +78,52 @@ public class OcrServiceImpl implements OcrService {
         return list;
     }
 
+    /**
+     * 处理PDF文件，将PDF页面转换为图片，并执行OCR识别
+     */
+    @Override
+    public List<String> ocrPdf(byte[] file) throws IOException {
+        PDDocument document = PDDocument.load(file);  // 使用byte[]加载PDF文件
+        int pageCount = document.getNumberOfPages();
+        List<String> allText = new ArrayList<>();
 
+        AipOcr client = new AipOcr(APP_ID, API_KEY, SECRET_KEY);
+        client.setConnectionTimeoutInMillis(2000);
+        client.setSocketTimeoutInMillis(60000);
+
+        for (int i = 0; i < pageCount; i++) {
+            byte[] imageBytes = pdfPageToImage(document, i);  // 将PDF页面转换为图片
+            HashMap<String, String> options = new HashMap<>();
+            options.put("recognize_granularity", "big");
+            options.put("detect_direction", "true");
+            options.put("vertexes_location", "true");
+            options.put("probability", "true");
+
+            org.json.JSONObject res = client.accurateGeneral(imageBytes, options);
+            JSONArray wordsResult = res.getJSONArray("words_result");
+
+            // 提取OCR结果
+            for (int j = 0; j < wordsResult.length(); j++) {
+                org.json.JSONObject wordResult = wordsResult.getJSONObject(j);
+                allText.add(wordResult.getString("words"));
+            }
+        }
+
+        document.close();  // 关闭PDF文件
+        return allText;
+    }
+
+
+    /**
+     * 将PDF每一页转换为图片
+     */
+    private byte[] pdfPageToImage(PDDocument document, int pageIndex) throws IOException {
+        PDFRenderer pdfRenderer = new PDFRenderer(document);
+        BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(pageIndex, 300); // 高质量图片
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ImageIO.write(bufferedImage, "PNG", byteArrayOutputStream);
+        return byteArrayOutputStream.toByteArray();
+    }
 
     @Override
     public JSONObject dataHandle(byte[] bytes) throws Exception {

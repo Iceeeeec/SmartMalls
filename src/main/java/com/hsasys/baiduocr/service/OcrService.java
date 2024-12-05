@@ -3,6 +3,7 @@ package com.hsasys.baiduocr.service;
 
 import com.alibaba.fastjson.JSONObject;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -35,4 +36,13 @@ public interface OcrService {
      * @throws Exception
      */
     public List<String> ocr_accurateGeneral(byte[] bytes)throws Exception;
+
+    /**
+     * 处理PDF文件，转换为图片并识别其中的文字
+     *
+     * @param bytes
+     * @return
+     * @throws IOException
+     */
+    public List<String> ocrPdf(byte[] bytes) throws IOException;
 }
