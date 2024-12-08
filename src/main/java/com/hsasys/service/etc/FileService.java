@@ -3,7 +3,6 @@ package com.hsasys.service.etc;
 import org.dromara.x.file.storage.core.FileInfo;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 
 public interface FileService
@@ -17,5 +16,7 @@ public interface FileService
      * 上传文件
      */
     FileInfo uploadFile(File file);
+
+    FileInfo uploadBytes(byte[] file);
 
 }

@@ -4,6 +4,7 @@ import com.hsasys.service.etc.FileService;
 import org.dromara.x.file.storage.core.FileInfo;
 import org.dromara.x.file.storage.core.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +19,8 @@ public class FileServiceImpl implements FileService
     @Autowired
     private FileStorageService fileStorageService;
 
+    @Value("${dromara.x-file-storage.aliyun-oss.domain}")
+    private static String domain;
     /**
      * 上传文件到云端
      * @param file
@@ -37,7 +40,20 @@ public class FileServiceImpl implements FileService
     }
 
     @Override
-    public FileInfo uploadFile(File file) {
+    public FileInfo uploadFile(File file)
+    {
+        // 上传文件路径
+        //指定oss保存文件路径 ***/2024/06/18/文件名
+        String objectName = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/";
+        //上传文件，返回文件信息
+        FileInfo fileInfo = fileStorageService.of(file)
+                .setPath(objectName)
+                .upload();
+        return fileInfo;
+    }
+
+    @Override
+    public FileInfo uploadBytes(byte[] file) {
         // 上传文件路径
         //指定oss保存文件路径 ***/2024/06/18/文件名
         String objectName = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/";

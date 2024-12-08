@@ -6,11 +6,13 @@ import com.hsasys.domain.entity.PhysicalType;
 import com.hsasys.domain.vo.PhysicalItemVo;
 import com.hsasys.result.Result;
 import com.hsasys.service.select.PhysicalService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/physical")
 public class PhysicalController
@@ -57,5 +59,23 @@ public class PhysicalController
     public Result createReport(@RequestBody PhysicalItemDto physicalItemDto)
     {
         return physicalService.createReport(physicalItemDto);
+    }
+
+    /**
+     * 保存体检项目到数据库
+     */
+    @PostMapping("/save")
+    public Result selectReportByStatus(@RequestBody PhysicalItemDto physicalItemDto)
+    {
+        return physicalService.saveReport(physicalItemDto);
+    }
+
+    /**
+     * 取消接收结果
+     */
+    @DeleteMapping("/cancel")
+    public Result cancelReport()
+    {
+        return physicalService.cancelReport();
     }
 }

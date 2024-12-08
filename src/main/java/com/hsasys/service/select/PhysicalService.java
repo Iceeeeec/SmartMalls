@@ -36,4 +36,18 @@ public interface PhysicalService
      * @return
      */
     Result createReport(PhysicalItemDto physicalItemDto);
+
+    /**
+     * 保存体检项目
+     * @param physicalItemDto
+     * @return
+     */
+    Result saveReport(PhysicalItemDto physicalItemDto);
+
+    /**
+     * 删除体检报告
+     * @return
+     */
+    Result cancelReport();
+
 }

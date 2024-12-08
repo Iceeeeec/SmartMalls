@@ -1,6 +1,7 @@
 package com.hsasys.constant;
 
-public enum AppHttpCodeEnum {
+public enum AppHttpCodeEnum
+{
     // 成功
     SUCCESS(200,"操作成功"),
     // 登录
@@ -22,7 +23,8 @@ public enum AppHttpCodeEnum {
     int code;
     String msg;
 
-    AppHttpCodeEnum(int code, String errorMessage){
+    AppHttpCodeEnum(int code, String errorMessage)
+    {
         this.code = code;
         this.msg = errorMessage;
     }
