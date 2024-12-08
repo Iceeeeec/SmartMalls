@@ -1,9 +1,11 @@
 spring:
+  profiles:
+    active: dev
   datasource: # 数据库信息配置
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://120.25.232.244:3306/smartmalls
-    username: SmartMalls
-    password: shuwu
+    url: jdbc:mysql://${hsa.datasource.host}:3306/${hsa.datasource.database}
+    username: ${hsa.datasource.username}
+    password: ${hsa.datasource.password}
     type: com.alibaba.druid.pool.DruidDataSource  # 设置druid数据源
   main:
     banner-mode: off  # 关闭spring的banner
@@ -21,9 +23,9 @@ mybatis-plus:
 
 baidu:
   ocr:
-    appId: 58618208
-    apiKey: l0uRAKrJxWGCzmir4ldxf8YR
-    secretKey: owm3G3IIavSoq5lQAnddifNiMot8c7TO
+    appId: ${hsa.ocr.appId}
+    apiKey: ${hsa.ocr.apiKey}
+    secretKey: ${hsa.ocr.secretKey}
 
 hsa:
   jwt:
@@ -44,9 +46,9 @@ dromara:
     aliyun-oss:
       - platform: aliyun-oss-1 # 存储平台标识
         enable-storage: true  # 启用存储
-        access-key: LTAI5tSRtWdas3ZtB5SxEaKB
-        secret-key: bi71gDOokKWCwClIwZJZ4fPqPriQYL
-        end-point: oss-cn-beijing.aliyuncs.com
-        bucket-name: hsa-file
-        domain: https://hsa-file.oss-cn-beijing.aliyuncs.com/ # 访问域名，注意“/”结尾，例如：https://abc.oss-cn-shanghai.aliyuncs.com/
+        access-key: ${hsa.alioss.access-key}
+        secret-key: ${hsa.alioss.secret-key}
+        end-point: ${hsa.alioss.endpoint}
+        bucket-name: ${hsa.alioss.bucket-name}
+        domain: ${hsa.alioss.domain} # 访问域名，注意“/”结尾，例如：https://abc.oss-cn-shanghai.aliyuncs.com/
         base-path: hsa/ # 基础路径

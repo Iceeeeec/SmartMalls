@@ -58,7 +58,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>2.0.21</version>
+            <version>1.2.83</version>
         </dependency>
         <!-- MyBatisPlus -->
         <dependency>
@@ -131,6 +131,11 @@
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>
             <version>5.5.13.2</version>
+        </dependency>
+        <dependency>
+            <groupId>spire.doc.free</groupId>
+            <artifactId>spire-doc-free</artifactId>
+            <version>5.3.2</version>
         </dependency>
 
     </dependencies>
