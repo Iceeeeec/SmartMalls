@@ -14,6 +14,7 @@ import com.hsasys.exception.UserIsExistException;
 import com.hsasys.result.Result;
 import com.hsasys.service.etc.FileService;
 import com.hsasys.service.select.PhysicalService;
+import com.hsasys.utils.AliOssUtil;
 import com.hsasys.utils.BeanCopyUtils;
 import com.hsasys.utils.ConvertUtils;
 import com.hsasys.utils.WordUtil;
@@ -44,7 +45,7 @@ public class PhysicalServiceImpl implements PhysicalService
     private UserMapper userMapper;
 
     @Autowired
-    private FileStorageService fileStorageService;
+    private AliOssUtil aliOssUtil;
 
 
     @Autowired
@@ -194,10 +195,10 @@ public class PhysicalServiceImpl implements PhysicalService
         List<PhysicalReport> reports = reportMapper.selectList(wrapper);
         //TODO 将oss中的没用的文件删除，暂定
         //将oss中的文件删除了
-//        for(PhysicalReport report : reports)
-//        {
-//            fileStorageService.delete(report.getFilePath());
-//        }
+        for(PhysicalReport report : reports)
+        {
+            aliOssUtil.deleteFile(report.getFilePath());
+        }
         reportMapper.delete(wrapper);
         return Result.success();
     }
