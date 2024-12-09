@@ -1,12 +1,15 @@
 package com.hsasys.service.select.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.hsasys.constant.AppHttpCodeEnum;
 import com.hsasys.context.BaseContext;
 import com.hsasys.dao.domain_mapper.PhysicalMapper;
+import com.hsasys.dao.domain_mapper.PhysicalResultMapper;
 import com.hsasys.dao.domain_mapper.ReportMapper;
 import com.hsasys.dao.domain_mapper.UserMapper;
 import com.hsasys.domain.dto.PhysicalItemDto;
+import com.hsasys.domain.dto.PhysicalItemUpdateDto;
 import com.hsasys.domain.entity.*;
 import com.hsasys.domain.vo.PhysicalItemVo;
 import com.hsasys.domain.vo.ReportInfoVo;
@@ -54,6 +57,9 @@ public class PhysicalServiceImpl implements PhysicalService
 
     @Autowired
     private ReportMapper reportMapper;
+
+    @Autowired
+    private PhysicalResultMapper physicalResultMapper;
     @Override
     public Result<List<PhysicalType>> selectTypes()
     {
@@ -212,6 +218,8 @@ public class PhysicalServiceImpl implements PhysicalService
         return Result.success(reportInfoList);
     }
 
+
+
     /**
      * 根据体检项目id和内容更新体检结果状态
      * @param itemId
@@ -253,5 +261,21 @@ public class PhysicalServiceImpl implements PhysicalService
             }
         }
         physicalMapper.insertResult(physicalResult);
+    }
+
+    /**
+     * 更新体检报告
+     * @param physicalItemUpdateDto
+     * @return
+     */
+    public Result updateReport(PhysicalItemUpdateDto physicalItemUpdateDto)
+    {
+        Long userId = BaseContext.getCurrentId();
+        PhysicalResult physicalResult = BeanCopyUtils.copyBean(physicalItemUpdateDto, PhysicalResult.class);
+        LambdaUpdateWrapper<PhysicalResult> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(PhysicalResult::getUserId, userId);
+        wrapper.eq(PhysicalResult::getItemId, physicalResult.getItemId());
+        physicalResultMapper.update(physicalResult, wrapper);
+        return Result.success();
     }
 }

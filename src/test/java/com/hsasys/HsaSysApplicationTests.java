@@ -2,6 +2,7 @@ package com.hsasys;
 
 import com.hsasys.dao.domain_mapper.AllergenMapper;
 import com.hsasys.dao.domain_mapper.PhysicalMapper;
+import com.hsasys.dao.domain_mapper.PhysicalResultMapper;
 import com.hsasys.dao.domain_mapper.ReportMapper;
 import com.hsasys.domain.dto.UserLoginDto;
 import com.hsasys.domain.entity.Allergen;
@@ -39,6 +40,9 @@ class HsaSysApplicationTests {
 
     @Autowired
     private AllergenMapper allergenMapper;
+
+    @Autowired
+    private PhysicalResultMapper resultMapper;
     @Test
     void test_login(){
         UserLoginDto user = new UserLoginDto();
@@ -85,5 +89,10 @@ class HsaSysApplicationTests {
     {
         List<ReportInfoVo> reportInfoList = reportMapper.getReportInfoList(28);
         System.out.println(reportInfoList);
+    }
+    @Test
+    void test_update()
+    {
+
     }
 }

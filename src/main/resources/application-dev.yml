@@ -1,0 +1,23 @@
+hsa:
+  alioss:
+    endpoint: oss-cn-beijing.aliyuncs.com
+    access-key: LTAI5tSRtWdas3ZtB5SxEaKB
+    secret-key: bi71gDOokKWCwClIwZJZ4fPqPriQYL
+    bucket-name: hsa-file
+    domain: https://hsa-file.oss-cn-beijing.aliyuncs.com/
+  datasource:
+    database: smartmalls
+    username: SmartMalls
+    password: shuwu
+    host: 120.25.232.244
+  ocr:
+    appId: 58618208
+    apiKey: l0uRAKrJxWGCzmir4ldxf8YR
+    secretKey: owm3G3IIavSoq5lQAnddifNiMot8c7TO
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    user-secret-key: poolexiaozhoudominoforHS256algorithm
+    # 设置jwt过期时间
+    user-ttl: 259200000
+    # 设置前端传递过来的令牌名称
+    user-token-name: Authorization

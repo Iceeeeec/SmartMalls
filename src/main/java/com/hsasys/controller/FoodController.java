@@ -28,7 +28,8 @@ public class FoodController {
     * 返回类型 List<Map<String,Object>>
     * */
     @RequestMapping("/get")
-    public Result getByName(@RequestParam String name){
+    public Result getByName(@RequestParam String name)
+    {
         return sFinishedFoodService.selectOne( name );
     }
 

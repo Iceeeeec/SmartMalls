@@ -1,6 +1,7 @@
 package com.hsasys.controller;
 
 import com.hsasys.domain.dto.PhysicalItemDto;
+import com.hsasys.domain.dto.PhysicalItemUpdateDto;
 import com.hsasys.domain.entity.PhysicalItem;
 import com.hsasys.domain.entity.PhysicalType;
 import com.hsasys.domain.vo.PhysicalItemVo;
@@ -79,9 +80,24 @@ public class PhysicalController
         return physicalService.cancelReport();
     }
 
+    /**
+     * 获取体检报告
+     * @return
+     */
     @GetMapping("/reportInfo")
     public Result getReportInfo()
     {
         return physicalService.getReportInfo();
+    }
+
+    /**
+     * 修改体检项目值
+     * @param physicalItemUpdateDto
+     * @return
+     */
+    @PutMapping("/updateReport")
+    public Result UpdateReport(@RequestBody PhysicalItemUpdateDto physicalItemUpdateDto)
+    {
+        return physicalService.updateReport(physicalItemUpdateDto);
     }
 }

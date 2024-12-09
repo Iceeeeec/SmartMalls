@@ -7,9 +7,19 @@
 
     </insert>
 
-    <select id="getReportInfoList" resultType="com.hsasys.domain.vo.ReportInfoVo" >
-        select r.item_id,r.content,r.`status`,i.type_id,i.physical_item_name,i.normal_range,i.unit,t.physical_name
-        from physical_result r JOIN physical_item i on r.item_id=i.id JOIN physical_type t ON i.type_id=t.id where user_id=#{userId}
+    <select id="getReportInfoList" resultType="com.hsasys.domain.vo.ReportInfoVo">
+        select r.item_id,
+               r.content,
+               r.`status`,
+               i.type_id,
+               i.physical_item_name,
+               i.normal_range,
+               i.unit,
+               t.physical_name
+        from physical_result r
+                 JOIN physical_item i on r.item_id = i.id
+                 JOIN physical_type t ON i.type_id = t.id
+        where user_id = #{userId}
     </select>
 
 </mapper>

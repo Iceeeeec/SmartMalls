@@ -1,6 +1,7 @@
 package com.hsasys.service.select;
 
 import com.hsasys.domain.dto.PhysicalItemDto;
+import com.hsasys.domain.dto.PhysicalItemUpdateDto;
 import com.hsasys.domain.entity.PhysicalItem;
 import com.hsasys.domain.entity.PhysicalType;
 import com.hsasys.domain.vo.PhysicalItemVo;
@@ -51,4 +52,11 @@ public interface PhysicalService
     Result cancelReport();
 
     Result getReportInfo();
+
+    /**
+     * 更新体检报告
+     * @param physicalItemUpdateDto
+     * @return
+     */
+    Result updateReport(PhysicalItemUpdateDto physicalItemUpdateDto);
 }

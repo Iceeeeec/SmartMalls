@@ -29,7 +29,7 @@ public class PhysicalResult
     //体检项目id
     private Integer itemId;
     //含量
-    private Object content;
+    private Double content;
     //状态
     private Integer status;
 
