@@ -218,7 +218,20 @@ public class PhysicalServiceImpl implements PhysicalService
         return Result.success(reportInfoList);
     }
 
-
+    /**
+     * 更新体检报告
+     * @param physicalItemUpdateDto
+     * @return
+     */
+    @Transactional
+    public Result updateReport(PhysicalItemUpdateDto physicalItemUpdateDto)
+    {
+        Long userId = BaseContext.getCurrentId();
+        PhysicalResult physicalResult = BeanCopyUtils.copyBean(physicalItemUpdateDto, PhysicalResult.class);
+        //更新数据并修改状态
+        updateResultStatus(physicalResult.getItemId(), physicalResult.getContent(), userId.intValue());
+        return Result.success();
+    }
 
     /**
      * 根据体检项目id和内容更新体检结果状态
@@ -230,15 +243,18 @@ public class PhysicalServiceImpl implements PhysicalService
     {
         LambdaQueryWrapper<PhysicalItem> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(PhysicalItem::getId, itemId);
+        //查询项目的正常范围
         PhysicalItem item = physicalMapper.selectOne(wrapper);
         String normalRange = item.getNormalRange();
         String[] split = normalRange.split("-");
         double min = Double.parseDouble(split[0]);
         double max = Double.parseDouble(split[1]);
+        //封装体检结果
         PhysicalResult physicalResult = PhysicalResult.builder()
                 .itemId(itemId)
                 .userId(userId)
                 .content(content).build();
+        //TODO 定义具体状态常量, 0为低， 1为正常，2为高
         if(content == null)
         {
             //用户，当正常
@@ -248,7 +264,6 @@ public class PhysicalServiceImpl implements PhysicalService
         {
             if(content < min)
             {
-                //TODO 定义具体状态常量, 0为低， 1为正常，2为高
                 physicalResult.setStatus(0);
             }
             else if(content > max)
@@ -260,22 +275,20 @@ public class PhysicalServiceImpl implements PhysicalService
                 physicalResult.setStatus(1);
             }
         }
-        physicalMapper.insertResult(physicalResult);
-    }
-
-    /**
-     * 更新体检报告
-     * @param physicalItemUpdateDto
-     * @return
-     */
-    public Result updateReport(PhysicalItemUpdateDto physicalItemUpdateDto)
-    {
-        Long userId = BaseContext.getCurrentId();
-        PhysicalResult physicalResult = BeanCopyUtils.copyBean(physicalItemUpdateDto, PhysicalResult.class);
-        LambdaUpdateWrapper<PhysicalResult> wrapper = new LambdaUpdateWrapper<>();
-        wrapper.eq(PhysicalResult::getUserId, userId);
-        wrapper.eq(PhysicalResult::getItemId, physicalResult.getItemId());
-        physicalResultMapper.update(physicalResult, wrapper);
-        return Result.success();
+        //判断是否存在，存在则改变，不存在则新增
+        LambdaQueryWrapper<PhysicalResult> resultWrapper = new LambdaQueryWrapper<>();
+        resultWrapper.eq(PhysicalResult::getUserId, userId);
+        resultWrapper.eq(PhysicalResult::getItemId, itemId);
+        PhysicalResult result = physicalResultMapper.selectOne(resultWrapper);
+        if(result == null)
+        {
+            //不存在记录，新增
+            physicalMapper.insertResult(physicalResult);
+        }
+        else
+        {
+            //存在记录，更新
+            physicalResultMapper.update(physicalResult, resultWrapper);
+        }
     }
 }

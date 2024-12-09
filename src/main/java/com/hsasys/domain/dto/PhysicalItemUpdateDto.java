@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PhysicalItemUpdateDto
 {
-    private Integer item_id;
+    private Integer itemId;
 
     private Double content;
 }
