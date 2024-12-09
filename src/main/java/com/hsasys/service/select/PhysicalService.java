@@ -50,4 +50,5 @@ public interface PhysicalService
      */
     Result cancelReport();
 
+    Result getReportInfo();
 }

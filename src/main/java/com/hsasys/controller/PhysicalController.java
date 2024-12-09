@@ -78,4 +78,10 @@ public class PhysicalController
     {
         return physicalService.cancelReport();
     }
+
+    @GetMapping("/reportInfo")
+    public Result getReportInfo()
+    {
+        return physicalService.getReportInfo();
+    }
 }

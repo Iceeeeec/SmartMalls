@@ -1,10 +1,13 @@
 package com.hsasys;
 
 import com.hsasys.dao.domain_mapper.AllergenMapper;
+import com.hsasys.dao.domain_mapper.PhysicalMapper;
+import com.hsasys.dao.domain_mapper.ReportMapper;
 import com.hsasys.domain.dto.UserLoginDto;
 import com.hsasys.domain.entity.Allergen;
 import com.hsasys.domain.entity.PhysicalType;
 import com.hsasys.domain.vo.PhysicalItemVo;
+import com.hsasys.domain.vo.ReportInfoVo;
 import com.hsasys.domain.vo.UserLoginVo;
 import com.hsasys.result.Result;
 import com.hsasys.service.etc.FileService;
@@ -28,6 +31,8 @@ class HsaSysApplicationTests {
 
     @Autowired
     private PhysicalService physicalService;
+    @Autowired
+    private ReportMapper reportMapper;
 
     @Autowired
     private FileService fileService;
@@ -74,5 +79,11 @@ class HsaSysApplicationTests {
     @Test
     void test_uploadImage() throws IOException
     {
+    }
+    @Test
+    void test_getReportInfo()
+    {
+        List<ReportInfoVo> reportInfoList = reportMapper.getReportInfoList(28);
+        System.out.println(reportInfoList);
     }
 }

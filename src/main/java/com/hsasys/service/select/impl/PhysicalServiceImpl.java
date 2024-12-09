@@ -9,6 +9,7 @@ import com.hsasys.dao.domain_mapper.UserMapper;
 import com.hsasys.domain.dto.PhysicalItemDto;
 import com.hsasys.domain.entity.*;
 import com.hsasys.domain.vo.PhysicalItemVo;
+import com.hsasys.domain.vo.ReportInfoVo;
 import com.hsasys.exception.ReportGenerateException;
 import com.hsasys.exception.UserIsExistException;
 import com.hsasys.result.Result;
@@ -201,6 +202,14 @@ public class PhysicalServiceImpl implements PhysicalService
         }
         reportMapper.delete(wrapper);
         return Result.success();
+    }
+
+    @Override
+    public Result getReportInfo() {
+        Long currentId = BaseContext.getCurrentId();
+        int userId = currentId.intValue();
+        List<ReportInfoVo> reportInfoList = reportMapper.getReportInfoList(userId);
+        return Result.success(reportInfoList);
     }
 
     /**
