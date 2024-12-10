@@ -218,7 +218,20 @@ public class PhysicalServiceImpl implements PhysicalService
         return Result.success(reportInfoList);
     }
 
-
+    /**
+     * 更新体检报告
+     * @param physicalItemUpdateDto
+     * @return
+     */
+    @Transactional
+    public Result updateReport(PhysicalItemUpdateDto physicalItemUpdateDto)
+    {
+        Long userId = BaseContext.getCurrentId();
+        PhysicalResult physicalResult = BeanCopyUtils.copyBean(physicalItemUpdateDto, PhysicalResult.class);
+        //更新数据并修改状态
+        updateResultStatus(physicalResult.getItemId(), physicalResult.getContent(), userId.intValue());
+        return Result.success();
+    }
 
 
     /**
@@ -280,20 +293,5 @@ public class PhysicalServiceImpl implements PhysicalService
         }
     }
 
-
-    /**
-     * 更新体检报告
-     * @param physicalItemUpdateDto
-     * @return
-     */
-    @Transactional
-    public Result updateReport(PhysicalItemUpdateDto physicalItemUpdateDto)
-    {
-        Long userId = BaseContext.getCurrentId();
-        PhysicalResult physicalResult = BeanCopyUtils.copyBean(physicalItemUpdateDto, PhysicalResult.class);
-        //更新数据并修改状态
-        updateResultStatus(physicalResult.getItemId(), physicalResult.getContent(), userId.intValue());
-        return Result.success();
-    }
 
 }
