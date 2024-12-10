@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Set;
 
 @Mapper
 public interface PhysicalMapper extends BaseMapper<PhysicalItem>
@@ -24,5 +25,9 @@ public interface PhysicalMapper extends BaseMapper<PhysicalItem>
     @Insert("insert into physical_result(user_id, item_id, content, status) values(#{userId}, #{itemId}, #{content}, #{status})")
     void insertResult(PhysicalResult physicalResult);
 
+    @Select( "select unit from physical_item" )
+    Set<String> selectAllUnit();
 
+    @Select("select physical_item_name from physical_item")
+    List<String> selectAllItem();
 }

@@ -1,10 +1,8 @@
 package com.hsasys.baiduocr.service;
 
 
-import com.alibaba.fastjson.JSONObject;
-
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 
 /**
  * OcrService接口
@@ -19,7 +17,7 @@ public interface OcrService {
      * @return 格式化后的json数据
      * @throws Exception
      */
-    public JSONObject dataHandle(byte[] bytes) throws Exception;
+    Map<String, String> dataHandle(byte[] bytes) throws Exception;
 
     /**
      * 数据处理（ocr 印章识别）
@@ -31,11 +29,12 @@ public interface OcrService {
 
     /**
      * 数据处理（ocr 高精度文字识别）
+     *
      * @param bytes
      * @return
      * @throws Exception
      */
-    public List<String> ocr_accurateGeneral(byte[] bytes)throws Exception;
+    public Map<String, String> ocr_accurateGeneral(byte[] bytes)throws Exception;
 
     /**
      * 处理PDF文件，转换为图片并识别其中的文字
@@ -44,5 +43,5 @@ public interface OcrService {
      * @return
      * @throws IOException
      */
-    public List<String> ocrPdf(byte[] bytes) throws IOException;
+    public Map<String, String> ocrPdf(byte[] bytes) throws IOException;
 }

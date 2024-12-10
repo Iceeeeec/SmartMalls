@@ -1,22 +1,23 @@
 package com.hsasys.baiduocr.service.impl;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.baidu.aip.ocr.AipOcr;
 import com.hsasys.baiduocr.service.OcrService;
+import com.hsasys.context.BaseContext;
+import com.hsasys.dao.domain_mapper.PhysicalMapper;
+import com.hsasys.domain.entity.PhysicalItem;
+import com.hsasys.service.select.PhysicalService;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.json.JSONArray;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Service
@@ -28,6 +29,10 @@ public class OcrServiceImpl implements OcrService {
     private String API_KEY="l0uRAKrJxWGCzmir4ldxf8YR";
     @Value("${baidu.ocr.secretKey}")
     private String SECRET_KEY="owm3G3IIavSoq5lQAnddifNiMot8c7TO";
+    @Autowired
+    private PhysicalMapper physicalMapper;
+    @Autowired
+    private PhysicalService physicalService;
 
 
     private Pattern hAsDigitPattern = Pattern.compile(".*\\d+.*");
@@ -45,7 +50,7 @@ public class OcrServiceImpl implements OcrService {
      * @return
      */
     @Override
-    public List<String> ocr_accurateGeneral(byte[] bytes) {
+    public Map<String, String> ocr_accurateGeneral(byte[] bytes) {
         // 初始化一个AipOcr
         AipOcr client = new AipOcr(APP_ID, API_KEY, SECRET_KEY);
 
@@ -66,7 +71,7 @@ public class OcrServiceImpl implements OcrService {
 
         JSONArray jsonArray = res.getJSONArray("words_result");
         //输出JSON数组
-        System.out.println("JSON数组===================>" + jsonArray);
+//        System.out.println("JSON数组===================>" + jsonArray);
         int length = jsonArray.length();
         List<String> list = new ArrayList<>(length);
         System.out.println("jsonArray length ==============>" + length);
@@ -74,15 +79,16 @@ public class OcrServiceImpl implements OcrService {
             org.json.JSONObject result = (org.json.JSONObject) jsonArray.get(i);
             list.add(result.getString("words"));
         }
+        Map<String, String> structuralization = structuralization(list);
 //        System.out.println(list);
-        return list;
+        return structuralization;
     }
 
     /**
      * 处理PDF文件，将PDF页面转换为图片，并执行OCR识别
      */
     @Override
-    public List<String> ocrPdf(byte[] file) throws IOException {
+    public Map<String, String> ocrPdf(byte[] file) throws IOException {
         PDDocument document = PDDocument.load(file);  // 使用byte[]加载PDF文件
         int pageCount = document.getNumberOfPages();
         List<String> allText = new ArrayList<>();
@@ -108,9 +114,10 @@ public class OcrServiceImpl implements OcrService {
                 allText.add(wordResult.getString("words"));
             }
         }
+        Map<String, String> structuralization = structuralization(allText);
 
         document.close();  // 关闭PDF文件
-        return allText;
+        return structuralization;
     }
 
 
@@ -125,11 +132,39 @@ public class OcrServiceImpl implements OcrService {
         return byteArrayOutputStream.toByteArray();
     }
 
+    /**
+     * 将OCR识别结果转换为简单的键值对形式
+     * @param list OCR识别的文本列表
+     * @return 检查结果的Map
+     */
+    private Map<String, String> structuralization(List<String> list) {
+        Map<String, String> results = new LinkedHashMap<>();
+        Set<String> unitList = physicalMapper.selectAllUnit();
+        List<String> itemList = physicalMapper.selectAllItem();
+        String[] itemArray = itemList.toArray(new String[0]);
+
+        int i = 0;
+        while (i < list.size() - 1) {
+            String current = list.get(i);
+
+            // 处理体检项目
+            if (Arrays.asList(itemArray).contains(current) && i + 1 < list.size()) {
+                String value = list.get(i + 1);
+                if (!value.isEmpty() && !"暂无".equals(value) && !unitList.contains(value) && !value.equals("血糖")) {
+                    results.put(current, value);
+                }
+                i=value.equals("血糖")?i+1:i+3;
+            } else {
+                i++;
+            }
+        }
+        
+        return results;
+    }
+
     @Override
-    public JSONObject dataHandle(byte[] bytes) throws Exception {
-        List<String> list = ocr_accurateGeneral(bytes);
-//        return structuralization(list);
-        return null;
+    public Map<String, String> dataHandle(byte[] bytes) throws Exception {
+        return ocr_accurateGeneral(bytes);
     }
 
 }

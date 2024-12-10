@@ -65,6 +65,7 @@
 package com.hsasys.baiduocr.api;
 
 import com.hsasys.baiduocr.service.OcrService;
+import com.hsasys.constant.AppHttpCodeEnum;
 import com.hsasys.result.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -76,6 +77,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/ocr")
@@ -117,20 +119,17 @@ public class OcrApiController {
 
             // 如果是PDF文件，进行PDF OCR处理
             if (fileExtension.equals("pdf")) {
-                List<String> result = ocrService.ocrPdf(file);
+                Map<String, String> result = ocrService.ocrPdf(file);
                 return Result.success(result);
             }
             // 如果是图片，进行图片OCR处理
             else {
-                List<String> result = ocrService.ocr_accurateGeneral(file);
+                Map<String, String> result = ocrService.ocr_accurateGeneral(file);
                 return Result.success(result);
             }
 
         } catch (Exception e) {
-            jsonObject.put("code", HttpStatus.INTERNAL_SERVER_ERROR.value());
-            jsonObject.put("result", false);
-            jsonObject.put("message", "OCR处理失败：" + e.getMessage());
-            return Result.error(jsonObject.toJSONString());
+            return Result.error(AppHttpCodeEnum.IDENTIFICATION_FAILED.getCode(),AppHttpCodeEnum.IDENTIFICATION_FAILED.getMsg());
         }
     }
 }
