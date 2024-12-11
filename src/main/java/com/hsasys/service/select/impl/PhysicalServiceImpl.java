@@ -178,7 +178,7 @@ public class PhysicalServiceImpl implements PhysicalService
         List<PhysicalItemDto.Measurement> measurementList = PhysicalItemDto.getMeasurementList(physicalItemDto);
         for (PhysicalItemDto.Measurement measurement : measurementList)
         {
-            //判断各个项目的状态
+            //设置各个项目的状态
             updateResultStatus(measurement.getId(), measurement.getContent(), userId);
         }
         //改变体检报告状态
@@ -206,15 +206,18 @@ public class PhysicalServiceImpl implements PhysicalService
         {
             aliOssUtil.deleteFile(report.getFilePath());
         }
+        //删除报告中没有审核的数据报告
         reportMapper.delete(wrapper);
         return Result.success();
     }
 
     @Override
-    public Result getReportInfo() {
+    public Result getReportInfo()
+    {
         Long currentId = BaseContext.getCurrentId();
         int userId = currentId.intValue();
         List<ReportInfoVo> reportInfoList = reportMapper.getReportInfoList(userId);
+
         return Result.success(reportInfoList);
     }
 
@@ -292,6 +295,4 @@ public class PhysicalServiceImpl implements PhysicalService
             physicalResultMapper.update(physicalResult, resultWrapper);
         }
     }
-
-
 }

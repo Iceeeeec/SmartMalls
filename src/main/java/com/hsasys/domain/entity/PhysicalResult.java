@@ -22,7 +22,8 @@ import lombok.NoArgsConstructor;
 @TableName("physical_result")
 public class PhysicalResult
 {
-    private Integer id;
+    @TableId
+    private Long id;
 
     //用户id
     private Integer userId;

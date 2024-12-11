@@ -55,18 +55,6 @@ public class SFinishedFoodServiceImpl implements SFinishedFoodService {
 
 
         return Result.success(finishedFoodVos);
-
-//        for(FinishedFood finishedFood:finishedFoods){
-//            // foodAddictive
-//            LambdaQueryWrapper<FoodFAdditive> wrapper1 = new LambdaQueryWrapper<>();
-//            wrapper1.eq(FoodFAdditive::getFood_id, finishedFood.getId());
-//            List<FoodFAdditive> foodFAdditives = foodFAdditiveMapper.selectList(wrapper1);
-//            List<FoodAdditive> foodAdditives = new ArrayList<>();
-//            for(FoodFAdditive foodFAdditive:foodFAdditives){
-//                LambdaQueryWrapper<FoodAdditive> wrapper2 = new LambdaQueryWrapper<>();
-//                wrapper2.select();
-//            }
-//        }
     }
 
 

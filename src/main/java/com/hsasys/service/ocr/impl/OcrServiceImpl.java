@@ -1,18 +1,23 @@
-package com.hsasys.baiduocr.service.impl;
+package com.hsasys.service.ocr.impl;
 
 
 import com.baidu.aip.ocr.AipOcr;
-import com.hsasys.baiduocr.service.OcrService;
-import com.hsasys.context.BaseContext;
+import com.hsasys.service.ocr.OcrService;
+import com.hsasys.constant.AppHttpCodeEnum;
 import com.hsasys.dao.domain_mapper.PhysicalMapper;
-import com.hsasys.domain.entity.PhysicalItem;
+import com.hsasys.domain.vo.OcrResultVo;
+import com.hsasys.result.Result;
 import com.hsasys.service.select.PhysicalService;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.ByteArrayOutputStream;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -24,24 +29,13 @@ import java.util.regex.Pattern;
 public class OcrServiceImpl implements OcrService {
 
     @Value("${baidu.ocr.appId}")
-    private String APP_ID="58618208";
+    private String APP_ID;
     @Value("${baidu.ocr.apiKey}")
-    private String API_KEY="l0uRAKrJxWGCzmir4ldxf8YR";
+    private String API_KEY;
     @Value("${baidu.ocr.secretKey}")
-    private String SECRET_KEY="owm3G3IIavSoq5lQAnddifNiMot8c7TO";
+    private String SECRET_KEY;
     @Autowired
     private PhysicalMapper physicalMapper;
-    @Autowired
-    private PhysicalService physicalService;
-
-
-    private Pattern hAsDigitPattern = Pattern.compile(".*\\d+.*");
-    private Pattern isDigitPattern = Pattern.compile("[0-9]{1,}");
-    private Pattern isDigitPrePattern = Pattern.compile("^(\\d+)(.*)");
-    private Pattern getStringOfNumbersPattern = Pattern.compile("\\d+");
-    private Pattern splitNotNumberPattern = Pattern.compile("\\D+");
-    private Pattern floatsNumberPattern = Pattern.compile("[\\d.]{1,}");
-    private Pattern trimNumberPattern = Pattern.compile("\\s*|\\t|\\r|\\n");
 
     /**
      * 百度ocr（高精度包含位置类型 accurateGeneral ）
@@ -50,7 +44,8 @@ public class OcrServiceImpl implements OcrService {
      * @return
      */
     @Override
-    public Map<String, String> ocr_accurateGeneral(byte[] bytes) {
+    public List<OcrResultVo> ocr_accurateGeneral(byte[] bytes)
+    {
         // 初始化一个AipOcr
         AipOcr client = new AipOcr(APP_ID, API_KEY, SECRET_KEY);
 
@@ -58,7 +53,7 @@ public class OcrServiceImpl implements OcrService {
         client.setConnectionTimeoutInMillis(2000);
         client.setSocketTimeoutInMillis(60000);
 
-        HashMap<String, String> options = new HashMap<String, String>();
+        HashMap<String, String> options = new HashMap<>();
 
         //参数（高精度含位置）
         options.put("recognize_granularity", "big");
@@ -70,8 +65,7 @@ public class OcrServiceImpl implements OcrService {
         org.json.JSONObject res = client.accurateGeneral(bytes, options);
 
         JSONArray jsonArray = res.getJSONArray("words_result");
-        //输出JSON数组
-//        System.out.println("JSON数组===================>" + jsonArray);
+
         int length = jsonArray.length();
         List<String> list = new ArrayList<>(length);
         System.out.println("jsonArray length ==============>" + length);
@@ -79,16 +73,16 @@ public class OcrServiceImpl implements OcrService {
             org.json.JSONObject result = (org.json.JSONObject) jsonArray.get(i);
             list.add(result.getString("words"));
         }
-        Map<String, String> structuralization = structuralization(list);
-//        System.out.println(list);
-        return structuralization;
+        List<OcrResultVo> ocrResultVos = handleList(list);
+
+        return ocrResultVos;
     }
 
     /**
      * 处理PDF文件，将PDF页面转换为图片，并执行OCR识别
      */
     @Override
-    public Map<String, String> ocrPdf(byte[] file) throws IOException {
+    public List<OcrResultVo> ocrPdf(byte[] file) throws IOException {
         PDDocument document = PDDocument.load(file);  // 使用byte[]加载PDF文件
         int pageCount = document.getNumberOfPages();
         List<String> allText = new ArrayList<>();
@@ -114,17 +108,50 @@ public class OcrServiceImpl implements OcrService {
                 allText.add(wordResult.getString("words"));
             }
         }
-        Map<String, String> structuralization = structuralization(allText);
+        List<OcrResultVo> ocrResultVos = handleList(allText);
 
         document.close();  // 关闭PDF文件
-        return structuralization;
+        return ocrResultVos;
+    }
+
+    @Override
+    public Result handleOcr(MultipartFile ocr)
+    {
+        byte[] file = null;
+        try {
+            file = ocr.getBytes();
+        } catch (IOException e) {
+            return Result.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "文件读取失败");
+        }
+        //处理ocr
+        try {
+            String fileName = ocr.getOriginalFilename();
+            assert fileName != null;
+            String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
+        // 如果是PDF文件，进行PDF OCR处理
+            List<OcrResultVo> result = null;
+            if (fileExtension.equals("pdf"))
+            {
+                result = ocrPdf(file);
+                return Result.success(result);
+            }
+            // 如果是图片，进行图片OCR处理
+            else
+            {
+                result = ocr_accurateGeneral(file);
+                return Result.success(result);
+            }
+        } catch (IOException e) {
+            return Result.error(AppHttpCodeEnum.IDENTIFICATION_FAILED.getCode(), AppHttpCodeEnum.IDENTIFICATION_FAILED.getMsg());
+        }
     }
 
 
     /**
      * 将PDF每一页转换为图片
      */
-    private byte[] pdfPageToImage(PDDocument document, int pageIndex) throws IOException {
+    private byte[] pdfPageToImage(PDDocument document, int pageIndex) throws IOException
+    {
         PDFRenderer pdfRenderer = new PDFRenderer(document);
         BufferedImage bufferedImage = pdfRenderer.renderImageWithDPI(pageIndex, 300); // 高质量图片
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -137,34 +164,41 @@ public class OcrServiceImpl implements OcrService {
      * @param list OCR识别的文本列表
      * @return 检查结果的Map
      */
-    private Map<String, String> structuralization(List<String> list) {
+    private List<OcrResultVo> handleList(List<String> list)
+    {
         Map<String, String> results = new LinkedHashMap<>();
-        Set<String> unitList = physicalMapper.selectAllUnit();
         List<String> itemList = physicalMapper.selectAllItem();
-        String[] itemArray = itemList.toArray(new String[0]);
 
+        List<OcrResultVo> result = new ArrayList<>();
         int i = 0;
-        while (i < list.size() - 1) {
+        while (i < list.size() - 1)
+        {
             String current = list.get(i);
-
+            //查询单位
+            String unit = physicalMapper.selectUnitByItemName(current);
             // 处理体检项目
-            if (Arrays.asList(itemArray).contains(current) && i + 1 < list.size()) {
+            if (itemList.contains(current) && i + 1 < list.size())
+            {
                 String value = list.get(i + 1);
-                if (!value.isEmpty() && !"暂无".equals(value) && !unitList.contains(value) && !value.equals("血糖")) {
-                    results.put(current, value);
+                //如果后面是数字则加进来
+                if (!value.isEmpty() && NumberUtils.isCreatable(value))
+                {
+                    //封装返回的对象
+                    OcrResultVo ocrResultVo = OcrResultVo.builder()
+                            .itemName(current)
+                            .content(value)
+                            .unit(unit).build();
+                    result.add(ocrResultVo);
                 }
-                i=value.equals("血糖")?i+1:i+3;
-            } else {
+
+                i = value.equals(current) ? i + 1 : i + 3;
+            }
+            else
+            {
                 i++;
             }
         }
-        
-        return results;
-    }
-
-    @Override
-    public Map<String, String> dataHandle(byte[] bytes) throws Exception {
-        return ocr_accurateGeneral(bytes);
+        return result;
     }
 
 }

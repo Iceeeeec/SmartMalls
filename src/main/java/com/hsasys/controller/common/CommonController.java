@@ -25,9 +25,6 @@ import java.util.Map;
 public class CommonController
 {
     @Autowired
-    private FileStorageService fileStorageService;//注入实列
-
-    @Autowired
     private FileService fileService;
     /**
      * 通用上传请求（单个）

@@ -15,5 +15,6 @@ public class UserType
 {
     @TableId(type = IdType.AUTO)
     private Integer id;
+
     private String type;
 }

@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -91,8 +92,12 @@ class HsaSysApplicationTests {
         System.out.println(reportInfoList);
     }
     @Test
-    void test_update()
+    void test_list1()
     {
-
+        ArrayList<String> s1 = new ArrayList<>();
+        s1.add("123");
+        s1.add("1233");
+        String s2 = "123";
+        System.out.println(s1.contains(s2));
     }
 }
