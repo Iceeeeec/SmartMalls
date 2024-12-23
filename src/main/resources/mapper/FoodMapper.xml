@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hsasys.dao.domain_mapper.FoodMapper">
+    <resultMap id="FoodVoMap" type="com.hsasys.domain.vo.FoodVo">
+        <id column="id" property="foodId"/>
+        <result column="food_name" property="foodName"/>
+        <result column="description" property="description"/>
+        <result column="picture" property="picture"/>
+        <collection property="nutritionComponents" javaType="java.util.List" ofType="com.hsasys.domain.entity.NutritionComponent">
+            <result column="name_en" property="nameEn"/>
+            <result column="name_cn" property="nameCn"/>
+            <result column="content" property="content"/>
+            <result column="status" property="status"/>
+        </collection>
+    </resultMap>
+
+
+
+    <select id="pageQuery" resultMap="FoodVoMap">
+        SELECT
+            f.id AS food_id,
+            f.food_name,
+            f.description,
+            f.picture,
+            nc.name_en,
+            nc.name_cn,
+            fn.content,
+            fn.status
+        FROM
+            foods f
+                LEFT JOIN food_nut fn ON f.id = fn.food_id AND fn.status = 2
+                LEFT JOIN nutritional_components nc ON fn.nut_id = nc.id
+                JOIN (
+                SELECT DISTINCT food_id
+                FROM food_nut
+                ORDER BY food_id
+                LIMIT #{offset}, #{pageSize}
+            ) t ON f.id = t.food_id
+        ORDER BY
+            f.id, nc.id;
+    </select>
+</mapper>

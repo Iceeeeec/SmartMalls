@@ -27,7 +27,8 @@ public class SFoodTypeServiceImpl implements SFoodTypeService {
 
 
     @Override
-    public Result selectAllFoodType() {
+    public Result selectAllFoodType()
+    {
         LambdaQueryWrapper<FoodType> wrapper = new LambdaQueryWrapper<>();
         List<FoodType> foodTypes = foodTypeMapper.selectList(wrapper);
         if(foodTypes == null)

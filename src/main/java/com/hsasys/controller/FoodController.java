@@ -1,6 +1,9 @@
 package com.hsasys.controller;
 
+import com.hsasys.domain.dto.FoodPageDto;
+import com.hsasys.result.PageResult;
 import com.hsasys.result.Result;
+import com.hsasys.service.select.FoodService;
 import com.hsasys.service.select.SFinishedFoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,9 +22,19 @@ public class FoodController {
     @Autowired
     private SFinishedFoodService sFinishedFoodService;
 
+    @Autowired
+    private FoodService foodService;
+
+
+    /**
+     * 展示所有的食物
+     * @param foodPageDto
+     * @return
+     */
     @RequestMapping("/all")
-    public Result selectAllFoods(){
-        return sFinishedFoodService.selectAllFoods();
+    public Result<PageResult> selectAllFoods(@RequestBody FoodPageDto foodPageDto)
+    {
+        return foodService.pageQuery(foodPageDto);
     }
 
     /*

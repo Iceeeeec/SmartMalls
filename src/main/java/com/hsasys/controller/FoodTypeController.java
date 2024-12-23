@@ -22,7 +22,6 @@ public class FoodTypeController {
     Result selectAllFoodType()
     {
         return sFoodTypeService.selectAllFoodType();
-//        return null;
     }
 
 }

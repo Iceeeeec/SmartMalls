@@ -52,3 +52,8 @@ dromara:
         bucket-name: ${hsa.alioss.bucket-name}
         domain: ${hsa.alioss.domain} # 访问域名，注意“/”结尾，例如：https://abc.oss-cn-shanghai.aliyuncs.com/
         base-path: hsa/ # 基础路径
+pagehelper:
+  auto-dialect: true
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql

@@ -1,30 +1,31 @@
 package com.hsasys;
 
-import com.hsasys.dao.domain_mapper.AllergenMapper;
-import com.hsasys.dao.domain_mapper.PhysicalMapper;
-import com.hsasys.dao.domain_mapper.PhysicalResultMapper;
-import com.hsasys.dao.domain_mapper.ReportMapper;
+import com.github.pagehelper.Page;
+import com.hsasys.dao.domain_mapper.*;
+import com.hsasys.domain.dto.FoodPageDto;
 import com.hsasys.domain.dto.UserLoginDto;
 import com.hsasys.domain.entity.Allergen;
 import com.hsasys.domain.entity.PhysicalType;
+import com.hsasys.domain.vo.FoodVo;
 import com.hsasys.domain.vo.PhysicalItemVo;
 import com.hsasys.domain.vo.ReportInfoVo;
 import com.hsasys.domain.vo.UserLoginVo;
+import com.hsasys.result.PageResult;
 import com.hsasys.result.Result;
 import com.hsasys.service.etc.FileService;
+import com.hsasys.service.select.FoodService;
 import com.hsasys.service.select.PhysicalService;
 import com.hsasys.service.select.SUserService;
-import com.hsasys.utils.ConvertUtils;
-import com.spire.doc.FileFormat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @SpringBootTest
 class HsaSysApplicationTests {
@@ -42,8 +43,7 @@ class HsaSysApplicationTests {
     @Autowired
     private AllergenMapper allergenMapper;
 
-    @Autowired
-    private PhysicalResultMapper resultMapper;
+
     @Test
     void test_login(){
         UserLoginDto user = new UserLoginDto();
@@ -99,5 +99,37 @@ class HsaSysApplicationTests {
         s1.add("1233");
         String s2 = "123";
         System.out.println(s1.contains(s2));
+    }
+
+
+    public static Double extractDoubleFromContent(String content) {
+        // 无效值直接返回 null
+        if (content == null || content.trim().equals("-") || content.trim().equals("Tr"))
+        {
+            return 0.0;
+        }
+
+        // 正则提取数字部分，包括整数和小数
+        Pattern pattern = Pattern.compile("\\d+\\.?\\d*");
+        Matcher matcher = pattern.matcher(content);
+
+        // 如果找到数字，则转换为 double 返回
+        if (matcher.find()) {
+            String number = matcher.group();
+            return Double.parseDouble(number);
+        }
+
+        // 没有找到数字时返回 null
+        return 0.0;
+    }
+
+    @Autowired
+    private FoodService foodService;
+    @Test
+    void test_pageFood()
+    {
+        FoodPageDto foodPageDto = new FoodPageDto(1, 10, null, null);
+        Result<PageResult> pageResultResult = foodService.pageQuery(foodPageDto);
+        System.out.println(pageResultResult);
     }
 }

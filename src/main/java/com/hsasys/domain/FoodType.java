@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("foodtypes")
-public class FoodType {
+public class FoodType
+{
     @TableId(type = IdType.AUTO)
     private Integer id;
     private String type;

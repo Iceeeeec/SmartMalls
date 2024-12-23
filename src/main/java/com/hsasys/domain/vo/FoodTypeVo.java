@@ -7,7 +7,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class FoodTypeVo {
+public class FoodTypeVo
+{
     private Integer id;
     private String type;
 

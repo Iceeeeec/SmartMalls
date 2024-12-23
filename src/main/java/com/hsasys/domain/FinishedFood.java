@@ -30,14 +30,4 @@ public class FinishedFood {
     private Double carbohydrate;
     private Double heat;
 
-//    @TableField(exist = false)
-//    private List<FoodAdditive> foodAdditives = null;
-//    @TableField(exist = false)
-//    private List<AddedSugar> addedSugars = null;
-//    @TableField(exist = false)
-//    private List<TransFattyAcid> transFattyAcids = null;
-//    @TableField(exist = false)
-//    private List<FoodLabel> foodLabels = null;
-//    @TableField(exist = false)
-//    private List<FoodType> foodTypes = null;
 }
