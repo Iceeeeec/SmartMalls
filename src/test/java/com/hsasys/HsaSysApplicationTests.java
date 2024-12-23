@@ -1,12 +1,11 @@
 package com.hsasys;
 
-import com.github.pagehelper.Page;
-import com.hsasys.dao.domain_mapper.*;
+import com.hsasys.mapper.AllergenMapper;
+import com.hsasys.mapper.ReportMapper;
 import com.hsasys.domain.dto.FoodPageDto;
 import com.hsasys.domain.dto.UserLoginDto;
 import com.hsasys.domain.entity.Allergen;
 import com.hsasys.domain.entity.PhysicalType;
-import com.hsasys.domain.vo.FoodVo;
 import com.hsasys.domain.vo.PhysicalItemVo;
 import com.hsasys.domain.vo.ReportInfoVo;
 import com.hsasys.domain.vo.UserLoginVo;
@@ -128,8 +127,9 @@ class HsaSysApplicationTests {
     @Test
     void test_pageFood()
     {
-        FoodPageDto foodPageDto = new FoodPageDto(1, 10, null, null);
-        Result<PageResult> pageResultResult = foodService.pageQuery(foodPageDto);
+        FoodPageDto foodPageDto = new FoodPageDto(1, 10, 2, null);
+
+        Result<PageResult> pageResultResult = foodService.selectFoodsByQuery(foodPageDto);
         System.out.println(pageResultResult);
     }
 }

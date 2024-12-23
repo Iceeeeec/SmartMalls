@@ -4,10 +4,9 @@ package com.hsasys.service.ocr.impl;
 import com.baidu.aip.ocr.AipOcr;
 import com.hsasys.service.ocr.OcrService;
 import com.hsasys.constant.AppHttpCodeEnum;
-import com.hsasys.dao.domain_mapper.PhysicalMapper;
+import com.hsasys.mapper.PhysicalMapper;
 import com.hsasys.domain.vo.OcrResultVo;
 import com.hsasys.result.Result;
-import com.hsasys.service.select.PhysicalService;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -23,7 +22,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
-import java.util.regex.Pattern;
 
 @Service
 public class OcrServiceImpl implements OcrService {

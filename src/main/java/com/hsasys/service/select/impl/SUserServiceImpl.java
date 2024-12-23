@@ -3,9 +3,12 @@ package com.hsasys.service.select.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hsasys.constant.JwtClaimsConstant;
 
-import com.hsasys.dao.domain_mapper.*;
+import com.hsasys.mapper.AllergenMapper;
+import com.hsasys.mapper.ChronicDiseaseMapper;
+import com.hsasys.mapper.FoodPreferenceMapper;
+import com.hsasys.mapper.UserMapper;
 
-import com.hsasys.domain.UserType;
+import com.hsasys.domain.entity.UserType;
 import com.hsasys.domain.dto.UserLoginDto;
 import com.hsasys.domain.entity.Allergen;
 import com.hsasys.domain.entity.ChronicDisease;
@@ -22,13 +25,11 @@ import com.hsasys.properties.JwtProperties;
 import com.hsasys.result.Result;
 import com.hsasys.service.select.SUserService;
 import com.hsasys.service.update.UUserService;
-import com.hsasys.utils.BMI;
 import com.hsasys.utils.BeanCopyUtils;
 import com.hsasys.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,22 +53,6 @@ public class SUserServiceImpl implements SUserService {
 
     @Autowired
     private JwtProperties jwtProperties;
-
-
-
-
-    @Override
-    public Double getBMI(Integer userId) {
-//        LambdaQueryWrapper<User> wrapper=new LambdaQueryWrapper<>();
-//        wrapper.eq( User::getHeight,user.getHeight() ).eq( User::getWeight,user.getWeight() );
-//        User user1 = userMapper.selectOne( wrapper );
-//        double bmi = BMI.calculateBMI(user1.getWeight(), user1.getHeight());
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getId, userId);
-        User user = userMapper.selectOne(wrapper);
-        double bmi = BMI.calculateBMI(user.getWeight(), user.getHeight());
-        return  bmi;
-    }
 
     @Override
     public Result<UserLoginVo> login(UserLoginDto userLoginDto)
@@ -110,6 +95,11 @@ public class SUserServiceImpl implements SUserService {
         return Result.success(userLoginVo);
     }
 
+    /**
+     * 用户注册
+     * @param userRegisterDto
+     * @return
+     */
     @Override
     public Result register(UserRegisterDto userRegisterDto)
     {

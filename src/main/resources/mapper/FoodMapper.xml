@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hsasys.dao.domain_mapper.FoodMapper">
+<mapper namespace="com.hsasys.dao.FoodMapper">
     <resultMap id="FoodVoMap" type="com.hsasys.domain.vo.FoodVo">
-        <id column="id" property="foodId"/>
+        <id column="food_id" property="foodId"/>
         <result column="food_name" property="foodName"/>
         <result column="description" property="description"/>
         <result column="picture" property="picture"/>
-        <collection property="nutritionComponents" javaType="java.util.List" ofType="com.hsasys.domain.entity.NutritionComponent">
+        <collection property="nutritionComponents" javaType="java.util.List"
+                    ofType="com.hsasys.domain.entity.NutritionComponent">
             <result column="name_en" property="nameEn"/>
             <result column="name_cn" property="nameCn"/>
             <result column="content" property="content"/>
@@ -16,8 +17,47 @@
     </resultMap>
 
 
-
     <select id="pageQuery" resultMap="FoodVoMap">
+        SELECT f.id AS food_id,
+               f.food_name,
+               f.description,
+               f.picture,
+               nc.name_en,
+               nc.name_cn,
+               fn.content,
+               fn.status
+        FROM foods f
+                 LEFT JOIN food_nut fn ON f.id = fn.food_id AND fn.status = 2
+                 LEFT JOIN nutritional_components nc ON fn.nut_id = nc.id
+                 JOIN (SELECT DISTINCT food_id
+                       FROM food_nut
+                       ORDER BY food_id
+                       LIMIT #{offset}, #{pageSize}) t ON f.id = t.food_id
+        ORDER BY f.id, nc.id;
+    </select>
+    <select id="selectFoodsByQuery" resultType="java.lang.Integer">
+        select id
+        from foods
+        <where>
+            and id in(
+            (
+            select food_id
+            from food_type
+            <where>
+                <if test="typeId != null">
+                    and type_id = #{typeId}
+                </if>
+            </where>
+            )
+            )
+            <if test="search != null and search != ''">
+                and food_name like concat('%',#{search},'%')
+                or description like concat('%',#{search},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectFoodsByIds" resultMap="FoodVoMap">
         SELECT
             f.id AS food_id,
             f.food_name,
@@ -31,12 +71,11 @@
             foods f
                 LEFT JOIN food_nut fn ON f.id = fn.food_id AND fn.status = 2
                 LEFT JOIN nutritional_components nc ON fn.nut_id = nc.id
-                JOIN (
-                SELECT DISTINCT food_id
-                FROM food_nut
-                ORDER BY food_id
-                LIMIT #{offset}, #{pageSize}
-            ) t ON f.id = t.food_id
+        WHERE
+            f.id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
         ORDER BY
             f.id, nc.id;
     </select>

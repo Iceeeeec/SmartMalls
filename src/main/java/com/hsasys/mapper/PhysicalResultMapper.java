@@ -1,4 +1,4 @@
-package com.hsasys.dao.domain_mapper;
+package com.hsasys.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hsasys.domain.entity.PhysicalResult;

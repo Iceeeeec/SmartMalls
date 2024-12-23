@@ -11,7 +11,4 @@ public interface SUserService {
     Result<UserLoginVo> login(UserLoginDto userLoginDto);
 
     Result register(UserRegisterDto userRegisterDto);
-
-
-    Double getBMI(Integer userId);
 }

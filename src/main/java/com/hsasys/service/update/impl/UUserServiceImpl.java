@@ -2,8 +2,7 @@ package com.hsasys.service.update.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 
-import com.hsasys.dao.domain_mapper.*;
-import com.hsasys.dao.rela_mapper.UserUTypeMapper;
+import com.hsasys.mapper.*;
 
 import com.hsasys.domain.dto.UserUpdateDto;
 import com.hsasys.domain.entity.Allergen;
@@ -97,6 +96,11 @@ public class UUserServiceImpl implements UUserService {
         return Result.success();
     }
 
+    /**
+     * 更新用户信息
+     * @param userUpdateDto
+     * @return
+     */
     @Override
     @Transactional
     public Result updateUser(UserUpdateDto userUpdateDto)

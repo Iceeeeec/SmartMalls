@@ -13,4 +13,11 @@ public interface FoodService
      * @return
      */
     Result<PageResult> pageQuery(FoodPageDto foodPageDto);
+
+    /**
+     * 根据条件查询食物
+     * @param foodPageDto
+     * @return
+     */
+    Result selectFoodsByQuery(FoodPageDto foodPageDto);
 }

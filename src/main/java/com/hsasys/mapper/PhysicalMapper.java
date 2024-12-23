@@ -1,16 +1,14 @@
-package com.hsasys.dao.domain_mapper;
+package com.hsasys.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hsasys.domain.entity.PhysicalItem;
 import com.hsasys.domain.entity.PhysicalResult;
 import com.hsasys.domain.entity.PhysicalType;
-import com.hsasys.domain.vo.ReportInfoVo;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
-import java.util.Set;
 
 @Mapper
 public interface PhysicalMapper extends BaseMapper<PhysicalItem>

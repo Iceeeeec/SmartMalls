@@ -1,13 +1,11 @@
 package com.hsasys.service.select.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.hsasys.constant.AppHttpCodeEnum;
 import com.hsasys.context.BaseContext;
-import com.hsasys.dao.domain_mapper.PhysicalMapper;
-import com.hsasys.dao.domain_mapper.PhysicalResultMapper;
-import com.hsasys.dao.domain_mapper.ReportMapper;
-import com.hsasys.dao.domain_mapper.UserMapper;
+import com.hsasys.mapper.PhysicalMapper;
+import com.hsasys.mapper.PhysicalResultMapper;
+import com.hsasys.mapper.ReportMapper;
+import com.hsasys.mapper.UserMapper;
 import com.hsasys.domain.dto.PhysicalItemDto;
 import com.hsasys.domain.dto.PhysicalItemUpdateDto;
 import com.hsasys.domain.entity.*;
@@ -23,13 +21,10 @@ import com.hsasys.utils.BeanCopyUtils;
 import com.hsasys.utils.ConvertUtils;
 import com.hsasys.utils.WordUtil;
 import org.dromara.x.file.storage.core.FileInfo;
-import org.dromara.x.file.storage.core.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

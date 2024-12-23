@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hsasys.dao.domain_mapper.AllergenMapper">
+<mapper namespace="com.hsasys.dao.AllergenMapper">
     <insert id="insertBatch">
         insert into user_allergen (user_id, allergen_id) values
         <foreach collection="allergenIds" item="allergenId" index="index" separator=",">

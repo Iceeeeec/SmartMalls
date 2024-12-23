@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hsasys.dao.domain_mapper.UserMapper">
+<mapper namespace="com.hsasys.dao.UserMapper">
 
 
-    <select id="selectUserTypesById" resultType="com.hsasys.domain.UserType">
+    <select id="selectUserTypesById" resultType="com.hsasys.domain.entity.UserType">
         select *
         FROM user_types
         where id = (select id_uTypes

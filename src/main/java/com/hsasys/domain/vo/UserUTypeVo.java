@@ -1,10 +1,8 @@
 package com.hsasys.domain.vo;
 
 
-import com.hsasys.domain.entity.User;
-import com.hsasys.domain.UserType;
+import com.hsasys.domain.entity.UserType;
 import lombok.*;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
