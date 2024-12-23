@@ -19,25 +19,13 @@ public class FoodController {
     @Autowired
     private FoodService foodService;
 
-
     /**
-     * 展示所有的食物（只包含高含量）
-     * @param foodPageDto
-     * @return
-     */
-    @PostMapping("/all")
-    public Result<PageResult> selectAllFoods(@RequestBody FoodPageDto foodPageDto)
-    {
-        return foodService.pageQuery(foodPageDto);
-    }
-
-    /**
-     * 根据类型查询食物
+     * 根据参数查询食物
      * @param
      * @return
      */
     @PostMapping("/query")
-    public Result selectFoodsByQuery(@RequestBody FoodPageDto foodPageDto)
+    public Result<PageResult> selectFoodsByQuery(@RequestBody FoodPageDto foodPageDto)
     {
         return foodService.selectFoodsByQuery(foodPageDto);
     }

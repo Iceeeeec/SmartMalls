@@ -13,12 +13,6 @@ public interface FoodMapper
 {
 
     /**
-     * 查询所有食物
-     * @return
-     */
-    Page<FoodVo> pageQuery(@Param("offset") int offset,@Param("pageSize") int pageSize);
-
-    /**
      * 根据条件查询食物ids
      * @param foodPageDto
      * @return

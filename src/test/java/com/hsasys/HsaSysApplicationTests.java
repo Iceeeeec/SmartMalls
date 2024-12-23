@@ -127,7 +127,7 @@ class HsaSysApplicationTests {
     @Test
     void test_pageFood()
     {
-        FoodPageDto foodPageDto = new FoodPageDto(1, 10, 2, null);
+        FoodPageDto foodPageDto = new FoodPageDto(100, 5, 2, null);
 
         Result<PageResult> pageResultResult = foodService.selectFoodsByQuery(foodPageDto);
         System.out.println(pageResultResult);
