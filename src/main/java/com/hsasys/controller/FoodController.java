@@ -1,6 +1,8 @@
 package com.hsasys.controller;
 
 import com.hsasys.domain.dto.FoodPageDto;
+import com.hsasys.domain.vo.FoodDetailVo;
+import com.hsasys.domain.vo.FoodVo;
 import com.hsasys.result.PageResult;
 import com.hsasys.result.Result;
 import com.hsasys.service.select.FoodService;
@@ -28,5 +30,14 @@ public class FoodController {
     public Result<PageResult> selectFoodsByQuery(@RequestBody FoodPageDto foodPageDto)
     {
         return foodService.selectFoodsByQuery(foodPageDto);
+    }
+
+    /**
+     * 根据id查询食物
+     */
+    @GetMapping("/{id}")
+    public Result<FoodDetailVo> selectFoodById(@PathVariable Integer id)
+    {
+        return foodService.selectFoodById(id);
     }
 }

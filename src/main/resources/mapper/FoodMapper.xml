@@ -60,4 +60,18 @@
         ORDER BY
             f.id, nc.id;
     </select>
+    <select id="selectTypeByFoodId" resultType="com.hsasys.domain.entity.FoodType">
+        select * from foodtypes
+        where id = (
+            select type_id
+            from food_type
+            where food_id = #{id}
+            )
+    </select>
+    <select id="selectFoodById" resultType="com.hsasys.domain.entity.NutritionComponent">
+        select nc.name_en, nc.name_cn, fn.content, fn.status
+        from nutritional_components nc
+        inner join food_nut fn on nc.id = fn.nut_id
+        where fn.food_id = #{id}
+    </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.hsasys;
 
+import com.hsasys.domain.vo.FoodDetailVo;
 import com.hsasys.mapper.AllergenMapper;
 import com.hsasys.mapper.ReportMapper;
 import com.hsasys.domain.dto.FoodPageDto;
@@ -131,5 +132,12 @@ class HsaSysApplicationTests {
 
         Result<PageResult> pageResultResult = foodService.selectFoodsByQuery(foodPageDto);
         System.out.println(pageResultResult);
+    }
+
+    @Test
+    void test_foodById()
+    {
+        Result<FoodDetailVo> foodDetailVoResult = foodService.selectFoodById(188);
+        System.out.println(foodDetailVoResult);
     }
 }

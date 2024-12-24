@@ -26,17 +26,10 @@ public class User
     private Double bmi;
     private Double height;
     private Double weight;
-    private String allergen;
-    @TableField("chronicDisease")
-    private String disease;
-    @TableField("foodPreference")
-    private String preference;
     @TableField("full_name")
     private String name;
 
     @TableField(exist = false)
     private UserType userType;
 
-    public void setAccount(String root) {
-    }
 }
