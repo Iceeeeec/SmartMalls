@@ -25,7 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -35,8 +38,6 @@ import java.util.Map;
 @Service
 public class PhysicalServiceImpl implements PhysicalService
 {
-
-    private final String TEMP_PATH = "src/main/resources/static/ReportTemplate.docx";
     @Autowired
     private PhysicalMapper physicalMapper;
 
@@ -135,7 +136,14 @@ public class PhysicalServiceImpl implements PhysicalService
         //输入模版
         try
         {
-            byte[] file = WordUtil.generateWordBytes(TEMP_PATH, map);
+            // 使用ClassLoader获取资源文件的InputStream
+            InputStream resourceStream = getClass().getClassLoader().getResourceAsStream("static/ReportTemplate.docx");
+            if (resourceStream == null) {
+                throw new FileNotFoundException("模版文件缺失，请稍后重试！");
+            }
+
+            // 将 InputStream 传递给工具类
+            byte[] file = WordUtil.generateWordBytes(resourceStream, map);
             file = ConvertUtils.wordToPdf(file);
             //上传pdf
             FileInfo PdfFileInfo = fileService.uploadBytes(file);

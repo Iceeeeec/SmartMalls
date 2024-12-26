@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class ConvertUtils
@@ -62,12 +65,6 @@ public class ConvertUtils
         try (PDDocument document = PDDocument.load(new ByteArrayInputStream(pdfBytes));
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
 
-            // 确保 PDF 只有一页
-            if (document.getNumberOfPages() != 1)
-            {
-                throw new IllegalArgumentException("The PDF should contain exactly one page.");
-            }
-
             // 创建 PDFRenderer 对象
             PDFRenderer pdfRenderer = new PDFRenderer(document);
 
@@ -94,8 +91,16 @@ public class ConvertUtils
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream())
         {
             doc.loadFromStream(in, FileFormat.Docx);
+            // 获取字体文件目录
+            InputStream fontInStream = ConvertUtils.class.getClassLoader().getResourceAsStream("font/simsun.ttc");
+            if(fontInStream == null)
+            {
+                throw new RuntimeException("字体文件缺失，请稍后重试！");
+            }
+            // 将单个 InputStream 包装成 InputStream 数组
+            InputStream[] customFonts = new InputStream[]{fontInStream};
             // 设置自定义字体目录
-            doc.setCustomFontsFolders("src/main/resources/font");
+            doc.setCustomFonts(customFonts);
             //保存为PDF格式
             doc.saveToStream(outputStream, FileFormat.PDF);
             // 返回生成的PDF字节数组

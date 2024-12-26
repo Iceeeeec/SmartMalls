@@ -5,6 +5,7 @@ import org.apache.poi.xwpf.usermodel.*;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -13,15 +14,14 @@ public class WordUtil {
     /**
      * 根据模板生成新Word文档内容（字节数组）
      *
-     * @param inputUrl 模板文件路径
+     * @param inputStream 模板文件路径
      * @param textMap  文本替换的键值对集合
      * @return 返回生成的Word文档内容字节数组
      * @throws IOException 读取模板或生成文件失败时抛出
      */
-    public static byte[] generateWordBytes(String inputUrl, Map<String, String> textMap) throws IOException {
-        try (XWPFDocument document = new XWPFDocument(new FileInputStream(inputUrl));
+    public static byte[] generateWordBytes(InputStream inputStream, Map<String, String> textMap) throws IOException {
+        try (XWPFDocument document = new XWPFDocument(inputStream);
              ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-
             // 替换段落中的占位符
             replaceTextInParagraphs(document.getParagraphs(), textMap);
 
