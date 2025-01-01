@@ -60,6 +60,7 @@
         ORDER BY
             f.id, nc.id;
     </select>
+
     <select id="selectTypeByFoodId" resultType="com.hsasys.domain.entity.FoodType">
         select * from foodtypes
         where id = (
@@ -68,16 +69,19 @@
             where food_id = #{id}
             )
     </select>
+
     <select id="selectFoodById" resultType="com.hsasys.domain.entity.NutritionComponent">
         select nc.name_en, nc.name_cn, fn.content, fn.status
         from nutritional_components nc
         inner join food_nut fn on nc.id = fn.nut_id
         where fn.food_id = #{id}
     </select>
-    <select id="selectNutrionByIds" resultMap="NutritionMap">
+
+    <select id="selectNutritionByIds" resultMap="FoodVoMap">
         SELECT
-        f.id,
+        f.id as food_id,
         f.food_name,
+        f.description,
         f.picture,  <!-- 这里是图片字段 -->
         nc.name_en,
         nc.name_cn,
@@ -92,18 +96,12 @@
         </foreach>
         ORDER BY f.id, nc.id
     </select>
-
-
-    <resultMap id="NutritionMap" type="com.hsasys.domain.entity.Nutrition">
-        <id column="id" property="id"/>
-        <result column="food_name" property="foodName"/>
-        <result column="picture" property="picture"/>  <!-- 映射图片字段 -->
-        <collection property="nutritionComponents" ofType="com.hsasys.domain.entity.NutritionComponent">
-            <result column="name_en" property="nameEn"/>
-            <result column="name_cn" property="nameCn"/>
-            <result column="content" property="content"/>
-            <result column="status" property="status"/>
-        </collection>
-    </resultMap>
+    <select id="selectBySearch" resultType="com.hsasys.domain.vo.FoodSearchVo">
+        select id, food_name, picture
+        FROM foods
+        where id in (select food_id FROM food_type where type_id = (select id from foodtypes where type LIKE concat('%',#{keyword},'%')))
+           or food_name like concat('%',#{keyword},'%')
+        limit 8
+    </select>
 
 </mapper>

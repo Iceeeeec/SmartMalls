@@ -8,6 +8,7 @@ import com.hsasys.domain.entity.FoodType;
 import com.hsasys.domain.entity.Nutrition;
 import com.hsasys.domain.entity.NutritionComponent;
 import com.hsasys.domain.vo.FoodDetailVo;
+import com.hsasys.domain.vo.FoodSearchVo;
 import com.hsasys.exception.FoodNotFoundException;
 import com.hsasys.mapper.FoodMapper;
 import com.hsasys.domain.dto.FoodPageDto;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class FoodServiceImpl implements FoodService
@@ -63,6 +65,7 @@ public class FoodServiceImpl implements FoodService
         Food food = foodMapper.selectOne(wrapper);
         if(food == null)
         {
+            //TODO: 抛出异常,定义常量
             throw new FoodNotFoundException("未找到该食物");
         }
         FoodDetailVo foodDetail = BeanCopyUtils.copyBean(food, FoodDetailVo.class);
@@ -76,13 +79,27 @@ public class FoodServiceImpl implements FoodService
     }
 
     @Override
-    public Result selectNutrion(List<Integer> ids) {
-        if(ids == null || ids.isEmpty()) {
+    public Result<List<FoodVo>> selectNutrition(List<Integer> ids)
+    {
+        if(ids == null || ids.isEmpty())
+        {
             return Result.error("食品ID列表不能为空");
         }
-        List<Nutrition> nutritionVos = foodMapper.selectNutrionByIds(ids);
+        List<FoodVo> nutritionVos = foodMapper.selectNutritionByIds(ids);
 
         return Result.success(nutritionVos);
+    }
+
+    /**
+     * 根据关键词搜索食物
+     * @param keyword
+     * @return
+     */
+    @Override
+    public Result<Set<FoodSearchVo>> selectBySearch(String keyword)
+    {
+        Set<FoodSearchVo> foods = foodMapper.selectBySearch(keyword);
+        return Result.success(foods);
     }
 
 

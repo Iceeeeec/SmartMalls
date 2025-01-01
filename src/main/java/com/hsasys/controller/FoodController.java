@@ -1,7 +1,10 @@
 package com.hsasys.controller;
 
 import com.hsasys.domain.dto.FoodPageDto;
+import com.hsasys.domain.entity.Food;
+import com.hsasys.domain.entity.Nutrition;
 import com.hsasys.domain.vo.FoodDetailVo;
+import com.hsasys.domain.vo.FoodSearchVo;
 import com.hsasys.domain.vo.FoodVo;
 import com.hsasys.result.PageResult;
 import com.hsasys.result.Result;
@@ -12,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @Transactional
@@ -47,7 +51,17 @@ public class FoodController {
      * 查询所有营养成分，完成食品对比
      */
     @PostMapping("/nutrition")
-    public Result getNutrition(@RequestBody List<Integer> ids) {
-        return foodService.selectNutrion(ids);
+    public Result<List<FoodVo>> getNutrition(@RequestBody List<Integer> ids)
+    {
+        return foodService.selectNutrition(ids);
+    }
+
+    /**
+     * 根据关健字查找食物
+     */
+    @GetMapping("/searchFood")
+    public Result<Set<FoodSearchVo>> selectBySearch(@RequestParam("keyword") String keyword)
+    {
+        return foodService.selectBySearch(keyword);
     }
 }

@@ -53,6 +53,10 @@ public interface PhysicalService
      */
     Result cancelReport();
 
+    /**
+     * 获取体检报告
+     * @return
+     */
     Result getReportInfo();
 
     /**

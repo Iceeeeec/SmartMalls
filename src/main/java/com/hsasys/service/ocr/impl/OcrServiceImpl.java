@@ -126,7 +126,7 @@ public class OcrServiceImpl implements OcrService {
             String fileName = ocr.getOriginalFilename();
             assert fileName != null;
             String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
-        // 如果是PDF文件，进行PDF OCR处理
+            // 如果是PDF文件，进行PDF OCR处理
             List<OcrResultVo> result = null;
             if (fileExtension.equals("pdf"))
             {
