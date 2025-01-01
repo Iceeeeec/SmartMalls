@@ -5,6 +5,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.hsasys.domain.entity.Food;
 import com.hsasys.domain.entity.FoodType;
+import com.hsasys.domain.entity.Nutrition;
 import com.hsasys.domain.entity.NutritionComponent;
 import com.hsasys.domain.vo.FoodDetailVo;
 import com.hsasys.exception.FoodNotFoundException;
@@ -73,4 +74,16 @@ public class FoodServiceImpl implements FoodService
         foodDetail.setNutritionComponents(nutritionComponents);
         return Result.success(foodDetail);
     }
+
+    @Override
+    public Result selectNutrion(List<Integer> ids) {
+        if(ids == null || ids.isEmpty()) {
+            return Result.error("食品ID列表不能为空");
+        }
+        List<Nutrition> nutritionVos = foodMapper.selectNutrionByIds(ids);
+
+        return Result.success(nutritionVos);
+    }
+
+
 }

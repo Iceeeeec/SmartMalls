@@ -5,6 +5,8 @@ import com.hsasys.domain.vo.FoodDetailVo;
 import com.hsasys.result.PageResult;
 import com.hsasys.result.Result;
 
+import java.util.List;
+
 public interface FoodService
 {
 
@@ -17,4 +19,6 @@ public interface FoodService
     Result<PageResult> selectFoodsByQuery(FoodPageDto foodPageDto);
 
     Result<FoodDetailVo> selectFoodById(Integer id);
+
+    Result selectNutrion(List<Integer> ids);
 }

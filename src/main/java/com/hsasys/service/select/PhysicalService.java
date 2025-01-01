@@ -7,10 +7,12 @@ import com.hsasys.domain.entity.PhysicalType;
 import com.hsasys.domain.vo.PhysicalItemVo;
 import com.hsasys.result.Result;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface PhysicalService
 {
+
 
     /**
      * 查询体检类型

@@ -74,4 +74,36 @@
         inner join food_nut fn on nc.id = fn.nut_id
         where fn.food_id = #{id}
     </select>
+    <select id="selectNutrionByIds" resultMap="NutritionMap">
+        SELECT
+        f.id,
+        f.food_name,
+        f.picture,  <!-- 这里是图片字段 -->
+        nc.name_en,
+        nc.name_cn,
+        fn.content,
+        fn.status
+        FROM foods f
+        LEFT JOIN food_nut fn ON f.id = fn.food_id
+        LEFT JOIN nutritional_components nc ON fn.nut_id = nc.id
+        WHERE f.id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        ORDER BY f.id, nc.id
+    </select>
+
+
+    <resultMap id="NutritionMap" type="com.hsasys.domain.entity.Nutrition">
+        <id column="id" property="id"/>
+        <result column="food_name" property="foodName"/>
+        <result column="picture" property="picture"/>  <!-- 映射图片字段 -->
+        <collection property="nutritionComponents" ofType="com.hsasys.domain.entity.NutritionComponent">
+            <result column="name_en" property="nameEn"/>
+            <result column="name_cn" property="nameCn"/>
+            <result column="content" property="content"/>
+            <result column="status" property="status"/>
+        </collection>
+    </resultMap>
+
 </mapper>

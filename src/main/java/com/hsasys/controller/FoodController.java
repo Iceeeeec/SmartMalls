@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @Transactional
 @ResponseBody
@@ -39,5 +41,13 @@ public class FoodController {
     public Result<FoodDetailVo> selectFoodById(@PathVariable Integer id)
     {
         return foodService.selectFoodById(id);
+    }
+
+    /**
+     * 查询所有营养成分，完成食品对比
+     */
+    @PostMapping("/nutrition")
+    public Result getNutrition(@RequestBody List<Integer> ids) {
+        return foodService.selectNutrion(ids);
     }
 }
