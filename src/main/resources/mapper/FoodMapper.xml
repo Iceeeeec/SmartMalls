@@ -99,7 +99,7 @@
     <select id="selectBySearch" resultType="com.hsasys.domain.vo.FoodSearchVo">
         select id, food_name, picture
         FROM foods
-        where id in (select food_id FROM food_type where type_id = (select id from foodtypes where type LIKE concat('%',#{keyword},'%')))
+        where id in (select food_id FROM food_type where type_id in (select id from foodtypes where type LIKE concat('%',#{keyword},'%')))
            or food_name like concat('%',#{keyword},'%')
         limit 8
     </select>
