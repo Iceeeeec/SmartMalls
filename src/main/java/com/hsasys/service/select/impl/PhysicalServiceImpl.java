@@ -2,10 +2,7 @@ package com.hsasys.service.select.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hsasys.context.BaseContext;
-import com.hsasys.mapper.PhysicalMapper;
-import com.hsasys.mapper.PhysicalResultMapper;
-import com.hsasys.mapper.ReportMapper;
-import com.hsasys.mapper.UserMapper;
+import com.hsasys.mapper.*;
 import com.hsasys.domain.dto.PhysicalItemDto;
 import com.hsasys.domain.dto.PhysicalItemUpdateDto;
 import com.hsasys.domain.entity.*;
@@ -47,7 +44,8 @@ public class PhysicalServiceImpl implements PhysicalService
     @Autowired
     private AliOssUtil aliOssUtil;
 
-
+    @Autowired
+    private FoodMapper foodMapper;
     @Autowired
     private FileService fileService;
 
@@ -236,6 +234,7 @@ public class PhysicalServiceImpl implements PhysicalService
         PhysicalResult physicalResult = BeanCopyUtils.copyBean(physicalItemUpdateDto, PhysicalResult.class);
         //更新数据并修改状态
         updateResultStatus(physicalResult.getItemId(), physicalResult.getContent(), userId.intValue());
+        foodMapper.deleteRecommendFood(userId.intValue());
         return Result.success();
     }
 

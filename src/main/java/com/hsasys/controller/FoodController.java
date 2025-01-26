@@ -1,6 +1,7 @@
 package com.hsasys.controller;
 
 import com.hsasys.domain.dto.FoodPageDto;
+import com.hsasys.domain.dto.FoodRecommendPageDto;
 import com.hsasys.domain.entity.Food;
 import com.hsasys.domain.entity.Nutrition;
 import com.hsasys.domain.vo.FoodDetailVo;
@@ -63,5 +64,14 @@ public class FoodController {
     public Result<Set<FoodSearchVo>> selectBySearch(@RequestParam("keyword") String keyword)
     {
         return foodService.selectBySearch(keyword);
+    }
+
+    /**
+     * 推荐食物
+     */
+    @PostMapping("/recommend")
+    public Result<PageResult> recommendFood(@RequestBody FoodRecommendPageDto foodRecommendPageDto)
+    {
+        return foodService.recommendFood(foodRecommendPageDto);
     }
 }

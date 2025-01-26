@@ -18,4 +18,6 @@ public interface ChronicDiseaseMapper extends BaseMapper<ChronicDisease>
     void deleteByUserId(Integer userId);
 
     void insertBatch(@Param("diseaseIds") List<Integer> diseaseIds, @Param("id") Integer id);
+
+    List<Integer> selectNutIdsByUserIdAndStatus(@Param("userId") Long userId, @Param("status") int status);
 }

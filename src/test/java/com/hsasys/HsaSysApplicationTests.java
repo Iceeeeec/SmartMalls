@@ -16,6 +16,7 @@ import com.hsasys.service.etc.FileService;
 import com.hsasys.service.select.FoodService;
 import com.hsasys.service.select.PhysicalService;
 import com.hsasys.service.select.SUserService;
+import com.hsasys.service.select.impl.FoodServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +33,8 @@ class HsaSysApplicationTests {
 //    @Autowired
 //    private SUserService userService;
 //
+    @Autowired
+    private FoodServiceImpl foodService;
 //    @Autowired
 //    private PhysicalService physicalService;
 //    @Autowired
@@ -140,4 +143,9 @@ class HsaSysApplicationTests {
 //        Result<FoodDetailVo> foodDetailVoResult = foodService.selectFoodById(188);
 //        System.out.println(foodDetailVoResult);
 //    }
+    @Test
+    void recommendTest()
+    {
+        foodService.addRecommendFood(28L);
+    }
 }

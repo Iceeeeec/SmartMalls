@@ -18,4 +18,6 @@ public interface AllergenMapper extends BaseMapper<Allergen>
     void deleteByUserId(Integer userId);
 
     void insertBatch(@Param("allergenIds") List<Integer> allergenIds, @Param("id") Integer id);
+
+    List<Integer> selectFoodIdsByUserId(Long userId);
 }

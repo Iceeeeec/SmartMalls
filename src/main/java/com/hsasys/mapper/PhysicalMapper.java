@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hsasys.domain.entity.PhysicalItem;
 import com.hsasys.domain.entity.PhysicalResult;
 import com.hsasys.domain.entity.PhysicalType;
+import com.hsasys.domain.rela.PhysicalItemNut;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -28,4 +30,6 @@ public interface PhysicalMapper extends BaseMapper<PhysicalItem>
 
     @Select("select physical_item_name from physical_item")
     List<String> selectAllItem();
+
+    List<PhysicalItemNut> selectItemNutByItemIdsAndStatus(@Param("itemIds") List<Integer> itemIds, @Param("status") int status);
 }

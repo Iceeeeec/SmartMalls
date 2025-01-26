@@ -15,4 +15,15 @@
             select disease_id from user_disease where user_id = #{userId}
         )
     </select>
+    <select id="selectGoodNutIdsByUserId" resultType="java.lang.Integer">
+
+    </select>
+    <select id="selectNutIdsByUserIdAndStatus" resultType="java.lang.Integer">
+        select nut_id
+        from disease_nut
+        where status = #{status}
+          and disease_id in (select disease_id
+                             from user_disease
+                             where user_id = #{userId})
+    </select>
 </mapper>

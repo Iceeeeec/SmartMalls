@@ -15,6 +15,13 @@
             <result column="status" property="status"/>
         </collection>
     </resultMap>
+    <insert id="insertRecommendFoodList">
+        INSERT INTO user_food (user_id, food_id, score)
+        VALUES
+        <foreach collection="recommendFoodList" item="item" separator=",">
+            (#{item.userId}, #{item.foodId}, #{item.score})
+        </foreach>
+    </insert>
 
     <select id="selectFoodsByQuery" resultType="java.lang.Integer">
         select id
@@ -102,6 +109,13 @@
         where id in (select food_id FROM food_type where type_id in (select id from foodtypes where type LIKE concat('%',#{keyword},'%')))
            or food_name like concat('%',#{keyword},'%')
         limit 8
+    </select>
+    <select id="selectFoodIdsByNutIds" resultType="com.hsasys.domain.rela.FoodNutrition">
+        select id, food_id, nut_id, status from food_nut where
+        nut_id in
+        <foreach collection="nutIds" item="nutId" open="(" separator="," close=")">
+            #{nutId}
+        </foreach>
     </select>
 
 </mapper>

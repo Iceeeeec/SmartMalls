@@ -29,6 +29,9 @@ import java.util.List;
 public class UUserServiceImpl implements UUserService {
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private FoodMapper foodMapper;
     @Autowired
     private UserUTypeMapper userUTypeMapper;
 
@@ -92,7 +95,7 @@ public class UUserServiceImpl implements UUserService {
                 }
             }
         }
-
+        foodMapper.deleteRecommendFood(user.getId()); // 先删除
         return Result.success();
     }
 
@@ -149,6 +152,8 @@ public class UUserServiceImpl implements UUserService {
         {
             foodPreferenceMapper.insertBatch(userUpdateDto.getPreferenceIds(), user.getId()); //批量添加
         }
+        //删除推荐表
+        foodMapper.deleteRecommendFood(user.getId());
         return Result.success();
     }
 

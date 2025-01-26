@@ -1,6 +1,7 @@
 package com.hsasys.service.select;
 
 import com.hsasys.domain.dto.FoodPageDto;
+import com.hsasys.domain.dto.FoodRecommendPageDto;
 import com.hsasys.domain.entity.Nutrition;
 import com.hsasys.domain.vo.FoodDetailVo;
 import com.hsasys.domain.vo.FoodSearchVo;
@@ -42,4 +43,11 @@ public interface FoodService
      * @return
      */
     Result<Set<FoodSearchVo>> selectBySearch(String keyword);
+
+    /**
+     * 推荐食物
+     * @return
+     */
+    Result<PageResult> recommendFood(FoodRecommendPageDto foodRecommendPageDto);
+
 }

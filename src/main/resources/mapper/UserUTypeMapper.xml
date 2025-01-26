@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hsasys.mapper.UserUTypeMapper">
+
+    <select id="selectBmiNutIdsByUserId" resultType="com.hsasys.domain.rela.BmiNutrition">
+        select *
+        from bmi_nutrition
+        where bmi_id in (select id_uTypes
+                         from rela_users_utypes
+                         where id_users= #{userId})
+    </select>
+</mapper>

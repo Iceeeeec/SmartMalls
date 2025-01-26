@@ -15,4 +15,12 @@
             select allergen_id from user_allergen where user_id = #{userId}
             )
     </select>
+    <select id="selectFoodIdsByUserId" resultType="java.lang.Integer">
+        select food_id
+        from food_allergen
+        where allergen_id in
+              (select allergen_id
+               from user_allergen
+               where user_id = #{userId})
+    </select>
 </mapper>
