@@ -246,23 +246,31 @@ public class FoodServiceImpl implements FoodService
                         .filter(s -> s.getRecommendation() == 1)
                         .map(PhysicalItemNut::getNutId)
                         .collect(Collectors.toList());
-                List<FoodNutrition> goodFoodNutrition = foodMapper.selectFoodIdsByNutIds(moreEatNutIds);
-                for(FoodNutrition foodNutrition : goodFoodNutrition)
+                if(!moreEatNutIds.isEmpty())
                 {
-                    Double score = (foodNutrition.getStatus() - 1) * 100 * 0.3;
-                    addOrUpdateRecommend(recommendFoodMap, userId, foodNutrition.getFoodId(), score);
+                    List<FoodNutrition> goodFoodNutrition = foodMapper.selectFoodIdsByNutIds(moreEatNutIds);
+                    for(FoodNutrition foodNutrition : goodFoodNutrition)
+                    {
+                        Double score = (foodNutrition.getStatus() - 1) * 100 * 0.3;
+                        addOrUpdateRecommend(recommendFoodMap, userId, foodNutrition.getFoodId(), score);
+                    }
                 }
+
                 //少吃的集合
                 List<Integer> lessEatNutIds = physicalItemNuts.stream()
                             .filter(s -> s.getRecommendation() == 0)
                             .map(PhysicalItemNut::getNutId)
                             .collect(Collectors.toList());
-                List<FoodNutrition> badFoodNutrition = foodMapper.selectFoodIdsByNutIds(lessEatNutIds);
-                for(FoodNutrition foodNutrition : badFoodNutrition)
+                if(!lessEatNutIds.isEmpty())
                 {
-                    Double score =  - ((foodNutrition.getStatus() - 1) * 100 * 0.3);
-                    addOrUpdateRecommend(recommendFoodMap, userId, foodNutrition.getFoodId(), score);
+                    List<FoodNutrition> badFoodNutrition = foodMapper.selectFoodIdsByNutIds(lessEatNutIds);
+                    for(FoodNutrition foodNutrition : badFoodNutrition)
+                    {
+                        Double score =  - ((foodNutrition.getStatus() - 1) * 100 * 0.3);
+                        addOrUpdateRecommend(recommendFoodMap, userId, foodNutrition.getFoodId(), score);
+                    }
                 }
+
             }
         }
         //bmi处理

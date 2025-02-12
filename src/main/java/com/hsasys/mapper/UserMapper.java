@@ -14,5 +14,8 @@ public interface UserMapper extends BaseMapper<User>
     @Insert("insert into users(username, password) values(#{username}, #{password})")
     void addUser(User user);
 
-    List<UserType> selectUserTypesById(Integer id);
+    UserType selectUserTypeById(Long id);
+
+
+    Integer calculateScore(Long id);
 }

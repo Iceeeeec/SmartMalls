@@ -2,13 +2,11 @@ package com.hsasys.service.update.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 
+import com.hsasys.context.BaseContext;
+import com.hsasys.domain.entity.*;
 import com.hsasys.mapper.*;
 
 import com.hsasys.domain.dto.UserUpdateDto;
-import com.hsasys.domain.entity.Allergen;
-import com.hsasys.domain.entity.ChronicDisease;
-import com.hsasys.domain.entity.FoodPreference;
-import com.hsasys.domain.entity.User;
 
 import com.hsasys.domain.rela.UserUType;
 import com.hsasys.exception.PasswordErrorException;
@@ -108,8 +106,6 @@ public class UUserServiceImpl implements UUserService {
     @Transactional
     public Result updateUser(UserUpdateDto userUpdateDto)
     {
-        System.out.println(userUpdateDto);
-        System.out.println(userUpdateDto.getPreferenceIds());
         //如果密码更改
         if(userUpdateDto.getPassword() != null && userUpdateDto.getOldPassword() != null)
         {
@@ -131,6 +127,29 @@ public class UUserServiceImpl implements UUserService {
         {
             double bmi = BMI.calculateBMI(userUpdateDto.getWeight(), userUpdateDto.getHeight());
             user.setBmi(bmi);
+            //修改bmi关联表
+            Integer type = BMI.interpretBMI(bmi); // 获取bmi类型
+            // 查询关联表
+            LambdaQueryWrapper<UserUType> wrapper1 = new LambdaQueryWrapper<>();
+            wrapper1.eq(UserUType::getUserId, user.getId());
+            UserUType userUType = userUTypeMapper.selectOne(wrapper1);
+            // 关联表是否有该用户的关联信息 有则覆盖 没有则添加
+            if(userUType == null)
+            {
+                int insert = userUTypeMapper.insert(new UserUType(null, user.getId(), type));
+                if(insert <= 0)
+                {
+                    throw new UpdateIsErrorException("更新失败, 请重试");
+                }
+            }
+            else
+            {
+                int update = userUTypeMapper.updateById(new UserUType(userUType.getId(), user.getId(), type));
+                if(update <= 0)
+                {
+                    throw new UpdateIsErrorException("更新失败, 请重试");
+                }
+            }
         }
         //更新基本的数据
         userMapper.updateById(user);
@@ -174,5 +193,49 @@ public class UUserServiceImpl implements UUserService {
         return Result.success(foodPreferenceMapper.selectList(null));
     }
 
+    /**
+     * 查询用户的类型
+     * @return
+     */
+    @Override
+    public Result<UserType> selectType()
+    {
+        Long userId = BaseContext.getCurrentId();
+        UserType type = userMapper.selectUserTypeById(userId);
+        return Result.success(type);
+    }
+
+    /**
+     * 计算分数
+     * @return
+     */
+    @Override
+    public Result<Integer> getScore()
+    {
+        Long userId = BaseContext.getCurrentId();
+
+        //算健康分数
+        Integer initialScore = 20;
+        UserType type = userMapper.selectUserTypeById(userId);
+        Integer typeId = type.getId();
+        Integer score = userMapper.calculateScore(userId);
+        if(score != null)
+        {
+            score = initialScore - Math.abs(score + typeId - initialScore);
+        }
+        else
+        {
+            score = initialScore;
+        }
+        score *= 5;
+        List<ChronicDisease> diseases = chronicDiseaseMapper.selectChronicDiseaseById(userId.intValue());
+        if(diseases != null && !diseases.isEmpty())
+        {
+            score -= diseases.size() * 3;
+        }
+        return Result.success(score);
+    }
+
 
 }
+

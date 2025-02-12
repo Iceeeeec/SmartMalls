@@ -4,11 +4,17 @@
 <mapper namespace="com.hsasys.mapper.UserMapper">
 
 
-    <select id="selectUserTypesById" resultType="com.hsasys.domain.entity.UserType">
+    <select id="selectUserTypeById" resultType="com.hsasys.domain.entity.UserType">
         select *
         FROM user_types
         where id = (select id_uTypes
                     from rela_users_utypes
                     where id_users = #{id})
+    </select>
+
+    <select id="calculateScore" resultType="java.lang.Integer">
+        select sum(status)
+        from physical_result
+        where user_id = #{id}
     </select>
 </mapper>

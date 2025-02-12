@@ -3,17 +3,12 @@ package com.hsasys.service.select.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hsasys.constant.JwtClaimsConstant;
 
-import com.hsasys.mapper.AllergenMapper;
-import com.hsasys.mapper.ChronicDiseaseMapper;
-import com.hsasys.mapper.FoodPreferenceMapper;
-import com.hsasys.mapper.UserMapper;
+import com.hsasys.context.BaseContext;
+import com.hsasys.domain.entity.*;
+import com.hsasys.domain.vo.ReportVo;
+import com.hsasys.mapper.*;
 
-import com.hsasys.domain.entity.UserType;
 import com.hsasys.domain.dto.UserLoginDto;
-import com.hsasys.domain.entity.Allergen;
-import com.hsasys.domain.entity.ChronicDisease;
-import com.hsasys.domain.entity.FoodPreference;
-import com.hsasys.domain.entity.User;
 import com.hsasys.domain.dto.UserRegisterDto;
 
 import com.hsasys.domain.vo.UserLoginVo;
@@ -54,6 +49,9 @@ public class SUserServiceImpl implements SUserService {
     @Autowired
     private JwtProperties jwtProperties;
 
+    @Autowired
+    private ReportMapper reportMapper;
+
     @Override
     public Result<UserLoginVo> login(UserLoginDto userLoginDto)
     {
@@ -76,9 +74,8 @@ public class SUserServiceImpl implements SUserService {
                 jwtProperties.getUserTtl(),
                 claims
         );
-        //根据id查询用户的类型
-        List<UserType> types = userMapper.selectUserTypesById(user.getId());
-        UserUTypeVo typeList = UserUTypeVo.builder().type(types).build();
+        //根据id查询用户的类型(只是bmi的)
+        UserType type = userMapper.selectUserTypeById(user.getId().longValue());
         //根据id查询过敏源
         List<Allergen> allergens =  allergenMapper.selectAllergensById(user.getId());
         //根据id查询慢性疾病
@@ -87,7 +84,7 @@ public class SUserServiceImpl implements SUserService {
         List<FoodPreference> foodPreferences = foodPreferenceMapper.selectPreferenceById(user.getId());
         //封装返回用户信息
         UserLoginVo userLoginVo = BeanCopyUtils.copyBean(user, UserLoginVo.class);
-        userLoginVo.setUserUTypeVo(typeList);
+        userLoginVo.setUserType(type);
         userLoginVo.setAllergen(allergens);
         userLoginVo.setDisease(chronicDiseases);
         userLoginVo.setPreference(foodPreferences);
@@ -131,6 +128,26 @@ public class SUserServiceImpl implements SUserService {
             userUpdateService.updateUserInfo(user);
         }
         return Result.success();
+    }
+
+    @Override
+    public Result<List<ReportVo>> selectReports()
+    {
+        Long userId = BaseContext.getCurrentId();
+        //查询用户信息
+        LambdaQueryWrapper<User> userWrapper = new LambdaQueryWrapper<>();
+        userWrapper.eq(User::getId, userId);
+        User user = userMapper.selectOne(userWrapper);
+        //根据用户id查询相关上传体检报告记录
+        LambdaQueryWrapper<PhysicalReport> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(PhysicalReport::getUserId, userId);
+        List<PhysicalReport> reports = reportMapper.selectList(wrapper);
+        //返回vo
+        List<ReportVo> reportVos = BeanCopyUtils.copyBeanList(reports, ReportVo.class);
+        //为每一条记录userName
+        reportVos.forEach(reportVo -> reportVo.setUserName(user.getName()));
+
+        return Result.success(reportVos);
     }
 
 }

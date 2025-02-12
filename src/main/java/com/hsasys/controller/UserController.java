@@ -6,6 +6,8 @@ import com.hsasys.domain.entity.Allergen;
 import com.hsasys.domain.entity.ChronicDisease;
 import com.hsasys.domain.entity.FoodPreference;
 import com.hsasys.domain.dto.UserRegisterDto;
+import com.hsasys.domain.entity.UserType;
+import com.hsasys.domain.vo.ReportVo;
 import com.hsasys.result.Result;
 import com.hsasys.service.select.SUserService;
 import com.hsasys.service.update.UUserService;
@@ -65,6 +67,7 @@ public class UserController {
     {
         return uUserService.getDiseases();
     }
+
     /**
      * 所有的饮食偏好
      */
@@ -72,5 +75,34 @@ public class UserController {
     public Result<List<FoodPreference>> getPreferences()
     {
         return uUserService.getPreferences();
+    }
+
+    /**
+     * 用户类型
+     * @return
+     */
+    @GetMapping("/type")
+    public Result<UserType> getUserTypes()
+    {
+        return uUserService.selectType();
+    }
+
+    /**
+     * 健康评分
+     * @return
+     */
+    @GetMapping("/score")
+    public Result<Integer> getScore()
+    {
+        return uUserService.getScore();
+    }
+
+    /**
+     * 查看提交的体检报告
+     */
+    @GetMapping("/report")
+    public Result<List<ReportVo>> getReports()
+    {
+        return sUserService.selectReports();
     }
 }

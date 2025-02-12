@@ -3,6 +3,7 @@ package com.hsasys.domain.vo;
 import com.hsasys.domain.entity.Allergen;
 import com.hsasys.domain.entity.ChronicDisease;
 import com.hsasys.domain.entity.FoodPreference;
+import com.hsasys.domain.entity.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,8 +41,7 @@ public class UserLoginVo
 
     private String token;
 
-
     //用户属于的类型
-    private UserUTypeVo userUTypeVo;
+    private UserType userType;
 
 }
