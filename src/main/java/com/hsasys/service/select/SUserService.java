@@ -11,8 +11,18 @@ import com.hsasys.result.Result;
 import java.util.List;
 
 public interface SUserService {
+    /**
+     * 登录
+     * @param userLoginDto
+     * @return
+     */
     Result<UserLoginVo> login(UserLoginDto userLoginDto);
 
+    /**
+     * 注册
+     * @param userRegisterDto
+     * @return
+     */
     Result register(UserRegisterDto userRegisterDto);
 
     /**

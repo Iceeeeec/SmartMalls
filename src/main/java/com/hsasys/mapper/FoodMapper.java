@@ -52,7 +52,7 @@ public interface FoodMapper extends BaseMapper<Food>
      * @param foodRecommendPageDto
      * @return
      */
-    @Select("select food_id from user_food where user_id = #{userId} and score >= 0 order by score desc")
+    @Select("select food_id from user_food where user_id = #{userId} and score >= 0 order by score desc, food_id")
     Page<Integer> recommendFoodIdsByUserId(FoodRecommendPageDto foodRecommendPageDto);
 
     List<FoodNutrition> selectFoodIdsByNutIds(@Param("nutIds") List<Integer> nutIds);

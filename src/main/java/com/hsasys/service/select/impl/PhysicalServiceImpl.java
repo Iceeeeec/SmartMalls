@@ -146,16 +146,8 @@ public class PhysicalServiceImpl implements PhysicalService
             //上传pdf
             FileInfo PdfFileInfo = fileService.uploadBytes(file);
             String pdfUrl = PdfFileInfo.getUrl();
-            //保存到数据库
-            PhysicalReport report = PhysicalReport.builder()
-                    .filePath(PdfFileInfo.getUrl())
-                    .userId(user.getId())
-                    .uploadDate(LocalDateTime.now())
-                    //TODO:定义常量 0为未审核 1未已审核
-                    .status(0)
-                    .build();
-            //将报告pdf保存在数据库
-            reportMapper.insert(report);
+            //将体检报告保存到数据库
+            savePhysicalReport(userId, pdfUrl);
             file = ConvertUtils.convertSinglePagePdfToImage(file);
             //上传图片
             FileInfo fileInfo = fileService.uploadBytes(file);
@@ -236,6 +228,32 @@ public class PhysicalServiceImpl implements PhysicalService
         updateResultStatus(physicalResult.getItemId(), physicalResult.getContent(), userId.intValue());
         foodMapper.deleteRecommendFood(userId.intValue());
         return Result.success();
+    }
+
+    /**
+     * 保存体检报告到数据库
+     * @param userId
+     * @param filePath
+     */
+    @Override
+    public void savePhysicalReport(Long userId, String filePath)
+    {
+        //先将0的给删除
+        LambdaQueryWrapper<PhysicalReport> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(PhysicalReport::getUserId, userId);
+        //TODO :定义常量 0为未审核
+        wrapper.eq(PhysicalReport::getStatus, 0);
+        reportMapper.delete(wrapper);
+        //保存到数据库
+        PhysicalReport report = PhysicalReport.builder()
+                .filePath(filePath)
+                .userId(userId.intValue())
+                .uploadDate(LocalDateTime.now())
+                //TODO:定义常量 0为未审核 1未已审核
+                .status(0)
+                .build();
+        //将报告pdf保存在数据库
+        reportMapper.insert(report);
     }
 
 

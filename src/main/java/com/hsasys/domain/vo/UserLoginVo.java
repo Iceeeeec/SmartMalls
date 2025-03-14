@@ -1,9 +1,6 @@
 package com.hsasys.domain.vo;
 
-import com.hsasys.domain.entity.Allergen;
-import com.hsasys.domain.entity.ChronicDisease;
-import com.hsasys.domain.entity.FoodPreference;
-import com.hsasys.domain.entity.UserType;
+import com.hsasys.domain.entity.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,6 +33,8 @@ public class UserLoginVo
     private List<ChronicDisease> disease;//慢性病
 
     private List<FoodPreference> preference;//食物喜好
+
+    private FamilyRole familyRole;
 
     private String name;
 

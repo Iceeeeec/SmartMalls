@@ -62,6 +62,7 @@ public class PhysicalController
         return physicalService.createReport(physicalItemDto);
     }
 
+
     /**
      * 保存体检项目到数据库
      */

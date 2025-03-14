@@ -19,11 +19,13 @@ import com.hsasys.exception.UserIsNotExistException;
 import com.hsasys.properties.JwtProperties;
 import com.hsasys.result.Result;
 import com.hsasys.service.select.SUserService;
+import com.hsasys.service.update.FamilyService;
 import com.hsasys.service.update.UUserService;
 import com.hsasys.utils.BeanCopyUtils;
 import com.hsasys.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +53,9 @@ public class SUserServiceImpl implements SUserService {
 
     @Autowired
     private ReportMapper reportMapper;
+
+    @Autowired
+    private FamilyService familyService;
 
     @Override
     public Result<UserLoginVo> login(UserLoginDto userLoginDto)
@@ -82,12 +87,15 @@ public class SUserServiceImpl implements SUserService {
         List<ChronicDisease> chronicDiseases = chronicDiseaseMapper.selectChronicDiseaseById(user.getId());
         //根据id查询饮食偏好
         List<FoodPreference> foodPreferences = foodPreferenceMapper.selectPreferenceById(user.getId());
+        //查询用户在家庭的角色
+        FamilyRole familyRole = familyService.getFamilyRoleByUserId(user.getId().longValue());
         //封装返回用户信息
         UserLoginVo userLoginVo = BeanCopyUtils.copyBean(user, UserLoginVo.class);
         userLoginVo.setUserType(type);
         userLoginVo.setAllergen(allergens);
         userLoginVo.setDisease(chronicDiseases);
         userLoginVo.setPreference(foodPreferences);
+        userLoginVo.setFamilyRole(familyRole);
         userLoginVo.setToken(token);
         return Result.success(userLoginVo);
     }
@@ -98,12 +106,17 @@ public class SUserServiceImpl implements SUserService {
      * @return
      */
     @Override
+    @Transactional
     public Result register(UserRegisterDto userRegisterDto)
     {
+        if(!userRegisterDto.getPassword().equals(userRegisterDto.getRePassword()))
+        {
+            throw new PasswordErrorException("两次密码不一致！请重新输入");
+        }
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getUsername, userRegisterDto.getUsername());
         User u = userMapper.selectOne(wrapper);
-        if(userRegisterDto.getFullName() == null)//通过昵称来判断添加还是更新
+        if(userRegisterDto.getFullName() == null || userRegisterDto.getFullName().isEmpty())//通过昵称来判断添加还是更新
         {
             if (u != null)
             {
@@ -140,7 +153,8 @@ public class SUserServiceImpl implements SUserService {
         User user = userMapper.selectOne(userWrapper);
         //根据用户id查询相关上传体检报告记录
         LambdaQueryWrapper<PhysicalReport> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(PhysicalReport::getUserId, userId);
+        wrapper.eq(PhysicalReport::getUserId, userId)
+                .orderByAsc(PhysicalReport::getUploadDate);
         List<PhysicalReport> reports = reportMapper.selectList(wrapper);
         //返回vo
         List<ReportVo> reportVos = BeanCopyUtils.copyBeanList(reports, ReportVo.class);

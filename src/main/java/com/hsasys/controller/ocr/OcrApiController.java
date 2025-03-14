@@ -64,8 +64,10 @@
 
 package com.hsasys.controller.ocr;
 
+import com.hsasys.context.BaseContext;
 import com.hsasys.service.ocr.OcrService;
 import com.hsasys.result.Result;
+import com.hsasys.service.select.PhysicalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,6 +82,8 @@ public class OcrApiController {
     @Autowired
     private OcrService ocrService;
 
+    @Autowired
+    private PhysicalService physicalService;
     /**
      * 完整路径：http://localhost:9003/api/ocr/awardHandle
      * 表单上传 form-data
@@ -89,8 +93,11 @@ public class OcrApiController {
      * @return Json返回体
      */
     @PostMapping("/awardHandle")
-    public Result awardHandle(@RequestParam("file") MultipartFile ocr)
+    public Result awardHandle(@RequestParam("file") MultipartFile ocr, @RequestParam("filePath") String filePath)
     {
+        Long userId = BaseContext.getCurrentId();
+        //保存体检报告到数据库
+        physicalService.savePhysicalReport(userId, filePath);
         return ocrService.handleOcr(ocr);
     }
 }

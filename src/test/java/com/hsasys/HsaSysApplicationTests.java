@@ -33,8 +33,8 @@ class HsaSysApplicationTests {
 //    @Autowired
 //    private SUserService userService;
 //
-    @Autowired
-    private FoodServiceImpl foodService;
+//    @Autowired
+//    private FoodServiceImpl foodService;
 //    @Autowired
 //    private PhysicalService physicalService;
 //    @Autowired
@@ -143,9 +143,9 @@ class HsaSysApplicationTests {
 //        Result<FoodDetailVo> foodDetailVoResult = foodService.selectFoodById(188);
 //        System.out.println(foodDetailVoResult);
 //    }
-    @Test
-    void recommendTest()
-    {
-        foodService.addRecommendFood(28L);
-    }
+//    @Test
+//    void recommendTest()
+//    {
+//        foodService.addRecommendFood(28L);
+//    }
 }

@@ -3,10 +3,9 @@ package com.hsasys.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.hsasys.domain.entity.UserType;
 import com.hsasys.domain.entity.User;
+import com.hsasys.domain.entity.Advice;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
 
 @Mapper
 public interface UserMapper extends BaseMapper<User>
@@ -18,4 +17,8 @@ public interface UserMapper extends BaseMapper<User>
 
 
     Integer calculateScore(Long id);
+
+    Advice selectAdviceByUserId(Long userId);
+
+    void deleteAdviceByUserId(Integer userId);
 }

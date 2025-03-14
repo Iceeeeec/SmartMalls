@@ -14,6 +14,7 @@ import com.hsasys.exception.PasswordIsEqualException;
 import com.hsasys.exception.UpdateIsErrorException;
 import com.hsasys.exception.UserIsExistException;
 import com.hsasys.result.Result;
+import com.hsasys.service.deepseek.DeepSeekService;
 import com.hsasys.service.update.UUserService;
 import com.hsasys.utils.BMI;
 import com.hsasys.utils.BeanCopyUtils;
@@ -41,6 +42,9 @@ public class UUserServiceImpl implements UUserService {
 
     @Autowired
     private FoodPreferenceMapper foodPreferenceMapper;
+
+    @Autowired
+    private DeepSeekService deepSeekService;
 
     @Override
     @Transactional
@@ -94,6 +98,7 @@ public class UUserServiceImpl implements UUserService {
             }
         }
         foodMapper.deleteRecommendFood(user.getId()); // 先删除
+        userMapper.deleteAdviceByUserId(user.getId());
         return Result.success();
     }
 
@@ -173,6 +178,8 @@ public class UUserServiceImpl implements UUserService {
         }
         //删除推荐表
         foodMapper.deleteRecommendFood(user.getId());
+        //删除建议
+        userMapper.deleteAdviceByUserId(user.getId());
         return Result.success();
     }
 
@@ -213,25 +220,13 @@ public class UUserServiceImpl implements UUserService {
     public Result<Integer> getScore()
     {
         Long userId = BaseContext.getCurrentId();
-
-        //算健康分数
-        Integer initialScore = 20;
-        UserType type = userMapper.selectUserTypeById(userId);
-        Integer typeId = type.getId();
-        Integer score = userMapper.calculateScore(userId);
-        if(score != null)
+        DeepSeekResult deepSeekResult = deepSeekService.calculateScoreByDeepSeek(userId);
+        Integer score = 60;
+        if(deepSeekResult.getExitCode() == 0)
         {
-            score = initialScore - Math.abs(score + typeId - initialScore);
-        }
-        else
-        {
-            score = initialScore;
-        }
-        score *= 5;
-        List<ChronicDisease> diseases = chronicDiseaseMapper.selectChronicDiseaseById(userId.intValue());
-        if(diseases != null && !diseases.isEmpty())
-        {
-            score -= diseases.size() * 3;
+            String output = deepSeekResult.getOutput();
+            score = Integer.parseInt(output);
+            return Result.success(score);
         }
         return Result.success(score);
     }

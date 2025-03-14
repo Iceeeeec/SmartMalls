@@ -65,4 +65,10 @@ public interface PhysicalService
      * @return
      */
     Result updateReport(PhysicalItemUpdateDto physicalItemUpdateDto);
+
+
+    /**
+     * 保存体检报告到数据库
+     */
+    void savePhysicalReport(Long userId, String filePath);
 }
