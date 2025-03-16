@@ -8,6 +8,7 @@ import com.hsasys.domain.entity.FoodPreference;
 import com.hsasys.domain.dto.UserRegisterDto;
 import com.hsasys.domain.entity.UserType;
 import com.hsasys.domain.vo.ReportVo;
+import com.hsasys.domain.vo.UserLoginVo;
 import com.hsasys.result.Result;
 import com.hsasys.service.select.SUserService;
 import com.hsasys.service.update.UUserService;
@@ -92,9 +93,9 @@ public class UserController {
      * @return
      */
     @GetMapping("/score")
-    public Result<Integer> getScore()
+    public Result<Integer> getScore(@RequestParam(required = false) Long memberId)
     {
-        return uUserService.getScore();
+        return uUserService.getScore(memberId);
     }
 
     /**
@@ -104,5 +105,13 @@ public class UserController {
     public Result<List<ReportVo>> getReports()
     {
         return sUserService.selectReports();
+    }
+    /**
+     * 根据userId查询相关健康信息
+     */
+    @GetMapping("/healthInfo/{userId}")
+    public Result<UserLoginVo> getUserInfo(@PathVariable Integer userId)
+    {
+        return sUserService.selectUserHealthInfo(userId);
     }
 }

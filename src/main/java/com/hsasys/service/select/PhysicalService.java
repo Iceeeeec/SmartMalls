@@ -57,7 +57,7 @@ public interface PhysicalService
      * 获取体检报告
      * @return
      */
-    Result getReportInfo();
+    Result getReportInfo(Integer memberId);
 
     /**
      * 更新体检报告

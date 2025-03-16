@@ -1,6 +1,7 @@
 package com.hsasys.service.select;
 
 import com.hsasys.domain.dto.UserLoginDto;
+import com.hsasys.domain.dto.UserUpdateDto;
 import com.hsasys.domain.entity.User;
 
 import com.hsasys.domain.dto.UserRegisterDto;
@@ -30,4 +31,6 @@ public interface SUserService {
      * @return
      */
     Result<List<ReportVo>> selectReports();
+
+    Result<UserLoginVo> selectUserHealthInfo(Integer userId);
 }

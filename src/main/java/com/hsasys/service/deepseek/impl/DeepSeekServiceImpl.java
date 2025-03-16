@@ -20,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -145,14 +148,22 @@ public class DeepSeekServiceImpl implements DeepSeekService {
     }
 
     // 获取资源文件路径
-    private String getPythonScriptPath(String scriptName)
-    {
-        // 获取 classpath 下的文件路径，resources 下的 static 目录会被映射到根目录
-        String resourcePath = getClass().getClassLoader().getResource("static/" + scriptName).getPath();
-
-        // 需要对路径做适配，去掉 URL 编码的部分，获取文件路径
-        return Paths.get(resourcePath).toString();
-
+    private String getPythonScriptPath(String scriptName) {
+        URL url = getClass().getClassLoader().getResource("static/" + scriptName);
+        if (url == null) {
+            throw new RuntimeException("Resource not found: " + scriptName);
+        }
+        try {
+            // 使用 URI 正确解析路径，避免 URL 前缀干扰
+            Path path = Paths.get(url.toURI());
+            // 处理 Windows 路径前导斜杠问题
+            if (path.toString().startsWith("/")) {
+                return path.toString().substring(1);
+            }
+            return path.toString();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Invalid URI for resource: " + scriptName, e);
+        }
     }
 
     private DeepSeekResult runPythonScript(String scriptName, Long userId)
@@ -162,7 +173,7 @@ public class DeepSeekServiceImpl implements DeepSeekService {
             // 获取 Python 脚本的路径
             String scriptPath = getPythonScriptPath(scriptName);
             ProcessBuilder processBuilder = new ProcessBuilder(
-                    "python3",  // 或者 "python" 取决于您的环境
+                    "python",  // 或者 "python" 取决于您的环境
                     scriptPath,
                     String.valueOf(userId)
             );

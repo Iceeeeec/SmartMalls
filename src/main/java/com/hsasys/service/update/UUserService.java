@@ -21,5 +21,5 @@ public interface UUserService {
 
     Result<UserType> selectType();
 
-    Result<Integer> getScore();
+    Result<Integer> getScore(Long memberId);
 }

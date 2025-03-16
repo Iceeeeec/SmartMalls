@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.hsasys.constant.JwtClaimsConstant;
 
 import com.hsasys.context.BaseContext;
+import com.hsasys.domain.dto.UserUpdateDto;
 import com.hsasys.domain.entity.*;
+import com.hsasys.domain.vo.FamilyMemberVo;
 import com.hsasys.domain.vo.ReportVo;
+import com.hsasys.exception.UserNoAuthToFindHeath;
 import com.hsasys.mapper.*;
 
 import com.hsasys.domain.dto.UserLoginDto;
@@ -30,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class SUserServiceImpl implements SUserService {
@@ -57,6 +61,32 @@ public class SUserServiceImpl implements SUserService {
     @Autowired
     private FamilyService familyService;
 
+    /**
+     * 获取用户健康信息
+     * @param user
+     * @return
+     */
+    public UserLoginVo getUserHealthVo(User user)
+    {
+        //根据id查询用户的类型(只是bmi的)
+        UserType type = userMapper.selectUserTypeById(user.getId().longValue());
+        //根据id查询过敏源
+        List<Allergen> allergens =  allergenMapper.selectAllergensById(user.getId());
+        //根据id查询慢性疾病
+        List<ChronicDisease> chronicDiseases = chronicDiseaseMapper.selectChronicDiseaseById(user.getId());
+        //根据id查询饮食偏好
+        List<FoodPreference> foodPreferences = foodPreferenceMapper.selectPreferenceById(user.getId());
+        //查询用户在家庭的角色
+        FamilyRole familyRole = familyService.getFamilyRoleByUserId(user.getId().longValue());
+        //封装返回用户信息
+        UserLoginVo userLoginVo = BeanCopyUtils.copyBean(user, UserLoginVo.class);
+        userLoginVo.setUserType(type);
+        userLoginVo.setAllergen(allergens);
+        userLoginVo.setDisease(chronicDiseases);
+        userLoginVo.setPreference(foodPreferences);
+        userLoginVo.setFamilyRole(familyRole);
+        return userLoginVo;
+    }
     @Override
     public Result<UserLoginVo> login(UserLoginDto userLoginDto)
     {
@@ -79,23 +109,7 @@ public class SUserServiceImpl implements SUserService {
                 jwtProperties.getUserTtl(),
                 claims
         );
-        //根据id查询用户的类型(只是bmi的)
-        UserType type = userMapper.selectUserTypeById(user.getId().longValue());
-        //根据id查询过敏源
-        List<Allergen> allergens =  allergenMapper.selectAllergensById(user.getId());
-        //根据id查询慢性疾病
-        List<ChronicDisease> chronicDiseases = chronicDiseaseMapper.selectChronicDiseaseById(user.getId());
-        //根据id查询饮食偏好
-        List<FoodPreference> foodPreferences = foodPreferenceMapper.selectPreferenceById(user.getId());
-        //查询用户在家庭的角色
-        FamilyRole familyRole = familyService.getFamilyRoleByUserId(user.getId().longValue());
-        //封装返回用户信息
-        UserLoginVo userLoginVo = BeanCopyUtils.copyBean(user, UserLoginVo.class);
-        userLoginVo.setUserType(type);
-        userLoginVo.setAllergen(allergens);
-        userLoginVo.setDisease(chronicDiseases);
-        userLoginVo.setPreference(foodPreferences);
-        userLoginVo.setFamilyRole(familyRole);
+        UserLoginVo userLoginVo = getUserHealthVo(user);
         userLoginVo.setToken(token);
         return Result.success(userLoginVo);
     }
@@ -162,6 +176,25 @@ public class SUserServiceImpl implements SUserService {
         reportVos.forEach(reportVo -> reportVo.setUserName(user.getName()));
 
         return Result.success(reportVos);
+    }
+
+    @Override
+    public Result<UserLoginVo> selectUserHealthInfo(Integer userId) {
+        // 获取到User的信息
+        User user = userMapper.selectById(userId);
+        Result<List<FamilyMemberVo>> familyMember = familyService.getFamilyMember();
+        // 获取到familyMember的信息，根据familyMember的id来判断这个userId是否在familyMember中
+        List<FamilyMemberVo> familyMemberData = familyMember.getData();
+        List<Integer> familyMemberIds = familyMemberData.stream()
+                .map(familyMemberVo -> familyMemberVo.getUserId())
+                .collect(Collectors.toList());
+        if(!familyMemberIds.contains(userId)){
+            throw new UserNoAuthToFindHeath("用户没有权限获取用户健康信息");
+        }
+        System.out.println(user);
+        UserLoginVo userHealthVo = getUserHealthVo(user);
+        // 成员信息就不需要封装token了
+        return Result.success(userHealthVo);
     }
 
 }

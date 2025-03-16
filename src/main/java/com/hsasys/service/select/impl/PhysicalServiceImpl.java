@@ -205,12 +205,14 @@ public class PhysicalServiceImpl implements PhysicalService
     }
 
     @Override
-    public Result getReportInfo()
+    public Result getReportInfo(Integer memberId)
     {
-        Long currentId = BaseContext.getCurrentId();
-        int userId = currentId.intValue();
-        List<ReportInfoVo> reportInfoList = reportMapper.getReportInfoList(userId);
-
+        if(memberId == null){
+            // 通过线程获取userId
+            Long currentId = BaseContext.getCurrentId();
+            memberId = currentId.intValue();
+        }
+        List<ReportInfoVo> reportInfoList = reportMapper.getReportInfoList(memberId);
         return Result.success(reportInfoList);
     }
 
@@ -222,11 +224,14 @@ public class PhysicalServiceImpl implements PhysicalService
     @Transactional
     public Result updateReport(PhysicalItemUpdateDto physicalItemUpdateDto)
     {
-        Long userId = BaseContext.getCurrentId();
+        Integer userId = physicalItemUpdateDto.getUserId();
+        if(userId == null){
+            userId = BaseContext.getCurrentId().intValue();
+        }
         PhysicalResult physicalResult = BeanCopyUtils.copyBean(physicalItemUpdateDto, PhysicalResult.class);
         //更新数据并修改状态
-        updateResultStatus(physicalResult.getItemId(), physicalResult.getContent(), userId.intValue());
-        foodMapper.deleteRecommendFood(userId.intValue());
+        updateResultStatus(physicalResult.getItemId(), physicalResult.getContent(), userId);
+        foodMapper.deleteRecommendFood(userId);
         return Result.success();
     }
 

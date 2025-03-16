@@ -86,9 +86,9 @@ public class PhysicalController
      * @return
      */
     @GetMapping("/reportInfo")
-    public Result getReportInfo()
+    public Result getReportInfo(@RequestParam(required = false) Integer memberId)
     {
-        return physicalService.getReportInfo();
+        return physicalService.getReportInfo(memberId);
     }
 
     /**

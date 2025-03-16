@@ -217,10 +217,12 @@ public class UUserServiceImpl implements UUserService {
      * @return
      */
     @Override
-    public Result<Integer> getScore()
+    public Result<Integer> getScore(Long memberId)
     {
-        Long userId = BaseContext.getCurrentId();
-        DeepSeekResult deepSeekResult = deepSeekService.calculateScoreByDeepSeek(userId);
+        if(memberId == null){
+            memberId = BaseContext.getCurrentId();
+        }
+        DeepSeekResult deepSeekResult = deepSeekService.calculateScoreByDeepSeek(memberId);
         Integer score = 60;
         if(deepSeekResult.getExitCode() == 0)
         {
