@@ -148,7 +148,8 @@ public class DeepSeekServiceImpl implements DeepSeekService {
     }
 
     // 获取资源文件路径
-    private String getPythonScriptPath(String scriptName) {
+    private String getPythonScriptPath(String scriptName)
+    {
         URL url = getClass().getClassLoader().getResource("static/" + scriptName);
         if (url == null) {
             throw new RuntimeException("Resource not found: " + scriptName);
@@ -157,7 +158,10 @@ public class DeepSeekServiceImpl implements DeepSeekService {
             // 使用 URI 正确解析路径，避免 URL 前缀干扰
             Path path = Paths.get(url.toURI());
             // 处理 Windows 路径前导斜杠问题
-            if (path.toString().startsWith("/")) {
+            // 检测操作系统
+            String osName = System.getProperty("os.name").toLowerCase();
+            // 如果是 Windows 系统且路径以斜杠开头，则去掉前导斜杠
+            if (osName.contains("win") && path.toString().startsWith("/")) {
                 return path.toString().substring(1);
             }
             return path.toString();
@@ -173,7 +177,7 @@ public class DeepSeekServiceImpl implements DeepSeekService {
             // 获取 Python 脚本的路径
             String scriptPath = getPythonScriptPath(scriptName);
             ProcessBuilder processBuilder = new ProcessBuilder(
-                    "python",  // 或者 "python" 取决于您的环境
+                    "python3",  // 或者 "python" 取决于您的环境
                     scriptPath,
                     String.valueOf(userId)
             );
