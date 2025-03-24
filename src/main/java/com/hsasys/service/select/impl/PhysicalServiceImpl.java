@@ -232,6 +232,7 @@ public class PhysicalServiceImpl implements PhysicalService
         //更新数据并修改状态
         updateResultStatus(physicalResult.getItemId(), physicalResult.getContent(), userId);
         foodMapper.deleteRecommendFood(userId);
+        userMapper.deleteAdviceByUserId(userId);
         return Result.success();
     }
 

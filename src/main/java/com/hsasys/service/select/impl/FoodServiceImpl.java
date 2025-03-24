@@ -309,11 +309,14 @@ public class FoodServiceImpl implements FoodService
         }
 
         //过敏原处理
-        allergenFoodIds.forEach(foodId ->
+        if(allergenFoodIds != null && !allergenFoodIds.isEmpty())
         {
-            Double score = -10000.0;
-            addOrUpdateRecommend(recommendFoodMap, userId, foodId, score);
-        });
+            allergenFoodIds.forEach(foodId ->
+            {
+                Double score = -10000.0;
+                addOrUpdateRecommend(recommendFoodMap, userId, foodId, score);
+            });
+        }
         List<RecommendFood> recommendFoodList = new ArrayList<>(recommendFoodMap.values());
         foodMapper.insertRecommendFoodList(recommendFoodList);
     }

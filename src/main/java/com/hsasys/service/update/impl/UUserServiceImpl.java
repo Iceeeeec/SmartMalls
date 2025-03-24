@@ -227,7 +227,9 @@ public class UUserServiceImpl implements UUserService {
         if(deepSeekResult.getExitCode() == 0)
         {
             String output = deepSeekResult.getOutput();
-            score = Integer.parseInt(output);
+            // 清理输出，确保无多余字符
+            String result = output.trim();
+            score = Integer.parseInt(result);
             return Result.success(score);
         }
         return Result.success(score);

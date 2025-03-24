@@ -68,4 +68,7 @@ public interface FoodMapper extends BaseMapper<Food>
 
     @Delete("delete from user_food where user_id = #{userId}")
     void deleteRecommendFood(@Param("userId") Integer userId);
+
+    @Select("select id from foods where food_name = #{foodName}")
+    Integer selectFoodByName(String foodName);
 }
